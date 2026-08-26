@@ -10,7 +10,7 @@ class Book extends Model
         'title',
         'author',
         'genre',
-        'year',
+        'publication_year',
         'description',
         'isbn',
         'cover',
@@ -18,6 +18,6 @@ class Book extends Model
     ];
 
     protected $casts = [
-        'year' => 'integer',
+        'publication_year' => 'integer',
     ];
 }

@@ -88,4 +88,62 @@ class BookController extends Controller
             ->route('books.index')
             ->with('success', 'Livro adicionado com sucesso!');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDITAR
+    |--------------------------------------------------------------------------
+    */
+
+    public function edit(Book $book)
+    {
+        return view('books.edit', compact('book'));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ATUALIZAR
+    |--------------------------------------------------------------------------
+    */
+
+    public function update(Request $request, Book $book)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'author' => ['required', 'string', 'max:255'],
+            'genre' => ['nullable', 'string', 'max:100'],
+            'publication_year' => [
+                'nullable',
+                'integer',
+                'min:1000',
+                'max:' . date('Y'),
+            ],
+        ], [
+            'title.required' => 'Informe o título do livro.',
+            'author.required' => 'Informe o autor do livro.',
+            'publication_year.min' => 'Informe um ano válido.',
+            'publication_year.max' => 'O ano não pode ser maior que ' . date('Y') . '.',
+        ]);
+
+        $book->update($validated);
+
+        return redirect()
+            ->route('books.index')
+            ->with('success', 'Livro atualizado com sucesso!');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | EXCLUIR
+    |--------------------------------------------------------------------------
+    */
+
+    public function destroy(Book $book)
+    {
+        $book->delete();
+
+        return redirect()
+            ->route('books.index')
+            ->with('success', 'Livro excluído com sucesso!');
+    }
 }

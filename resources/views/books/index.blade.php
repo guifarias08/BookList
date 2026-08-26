@@ -276,15 +276,14 @@
                 <table>
 
                     <thead>
-
-                        <tr>
-                            <th>Livro</th>
-                            <th>Autor</th>
-                            <th>Gênero</th>
-                            <th>Publicação</th>
-                        </tr>
-
-                    </thead>
+                            <tr>
+                                <th>Livro</th>
+                                <th>Autor</th>
+                                <th>Gênero</th>
+                                <th>Publicação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
 
                     <tbody>
 
@@ -337,12 +336,39 @@
                                 </td>
 
 
-                                <td class="year">
+                              <td class="year">
+                             {{ $book->publication_year ?? '—' }}
+                              </td>
+                                <td>
+                                <div class="book-actions">
 
-                                    {{ $book->publication_year ?? '—' }}
+                                    <a
+                                        href="{{ route('books.edit', $book) }}"
+                                        class="btn-edit"
+                                    >
+                                        ✏️ Editar
+                                    </a>
 
-                                </td>
+                                    <form
+                                        action="{{ route('books.destroy', $book) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Tem certeza que deseja excluir este livro?')"
+                                    >
 
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button
+                                            type="submit"
+                                            class="btn-delete"
+                                        >
+                                            🗑️ Excluir
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
                             </tr>
 
                         @endforeach
