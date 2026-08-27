@@ -2685,5 +2685,39 @@ tbody tr:hover {
     .form-heading {
         align-items: flex-start;
     }
+        .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+            }
 
+            .status-want {
+                color: #7c3aed;
+                background: #f3e8ff;
+            }
+
+            .status-reading {
+                color: #2563eb;
+                background: #dbeafe;
+            }
+
+            .status-read {
+                color: #15803d;
+                background: #dcfce7;
+            }
+
+            .status-paused {
+                color: #b45309;
+                background: #fef3c7;
+            }
+
+            .status-abandoned {
+                color: #dc2626;
+                background: #fee2e2;
+}
 }

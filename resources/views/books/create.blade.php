@@ -128,7 +128,46 @@
                 @enderror
 
             </div>
+                <div class="form-group">
 
+                <label for="status">
+                    Status de leitura <span>*</span>
+                </label>
+
+                <select id="status" name="status" required>
+
+                    <option value="want_to_read"
+                        @selected(old('status', 'want_to_read') === 'want_to_read')}>
+                        📕 Quero ler
+                    </option>
+
+                    <option value="reading"
+                        @selected(old('status') === 'reading')}>
+                        📖 Lendo
+                    </option>
+
+                    <option value="read"
+                        @selected(old('status') === 'read')}>
+                        ✅ Lido
+                    </option>
+
+                    <option value="paused"
+                        @selected(old('status') === 'paused')}>
+                        ⏸️ Pausado
+                    </option>
+
+                    <option value="abandoned"
+                        @selected(old('status') === 'abandoned')}>
+                        ❌ Abandonei
+                    </option>
+
+                </select>
+
+                @error('status')
+                    <small>{{ $message }}</small>
+                @enderror
+
+            </div>
 
             <div class="form-group">
 

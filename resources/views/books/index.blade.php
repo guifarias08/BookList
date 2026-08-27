@@ -197,6 +197,7 @@
                         <th>Autor</th>
                         <th>Gênero</th>
                         <th>Publicação</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
 
@@ -266,7 +267,76 @@
                                 {{ $book->publication_year ?? '—' }}
                             </td>
 
+                                                        <td>
+                            @php
+                                $statuses = [
+                                    'want_to_read' => [
+                                        'label' => 'Quero ler',
+                                        'class' => 'status-want',
+                                        'icon' => '📕',
+                                    ],
+                                    'reading' => [
+                                        'label' => 'Lendo',
+                                        'class' => 'status-reading',
+                                        'icon' => '📖',
+                                    ],
+                                    'read' => [
+                                        'label' => 'Lido',
+                                        'class' => 'status-read',
+                                        'icon' => '✅',
+                                    ],
+                                    'paused' => [
+                                        'label' => 'Pausado',
+                                        'class' => 'status-paused',
+                                        'icon' => '⏸️',
+                                    ],
+                                    'abandoned' => [
+                                        'label' => 'Abandonei',
+                                        'class' => 'status-abandoned',
+                                        'icon' => '❌',
+                                    ],
+                                ];
 
+                                $status = $statuses[$book->status] ?? $statuses['want_to_read'];
+                            @endphp
+
+                            <span class="status-badge {{ $status['class'] }}">
+                                {{ $status['icon'] }}
+                                {{ $status['label'] }}
+                            </span>
+                        </td>
+                                            <select name="status" class="select">
+
+                        <option value="">
+                            Todos os status
+                        </option>
+
+                        <option value="want_to_read"
+                            @selected(request('status') === 'want_to_read')}>
+                            📕 Quero ler
+                        </option>
+
+                        <option value="reading"
+                            @selected(request('status') === 'reading')}>
+                            📖 Lendo
+                        </option>
+
+                        <option value="read"
+                            @selected(request('status') === 'read')}>
+                            ✅ Lido
+                        </option>
+
+                        <option value="paused"
+                            @selected(request('status') === 'paused')}>
+                            ⏸️ Pausado
+                        </option>
+
+                        <option value="abandoned"
+                            @selected(request('status') === 'abandoned')}>
+                            ❌ Abandonei
+                        </option>
+
+                    </select>
                             <td>
 
                                 <div class="book-actions">

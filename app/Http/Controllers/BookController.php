@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use Illuminate\Http\Request;
+use App\Models\Book;
 
 class BookController extends Controller
 {
@@ -13,17 +13,29 @@ class BookController extends Controller
 
         // Busca por título ou autor
         if ($request->filled('search')) {
+
             $search = trim($request->input('search'));
 
             $query->where(function ($q) use ($search) {
+
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('author', 'like', "%{$search}%");
+                ->orWhere('author', 'like', "%{$search}%");
+
             });
         }
 
         // Filtro por gênero
         if ($request->filled('genre')) {
+
             $query->where('genre', $request->input('genre'));
+
+        }
+
+        // Filtro por status
+        if ($request->filled('status')) {
+
+            $query->where('status', $request->input('status'));
+
         }
 
         $books = $query
@@ -49,13 +61,28 @@ class BookController extends Controller
             ->orderBy('genre')
             ->pluck('genre');
 
+            $totalWantToRead = Book::where('status', 'want_to_read')->count();
+
+            $totalReading = Book::where('status', 'reading')->count();
+
+            $totalRead = Book::where('status', 'read')->count();
+
+            $totalPaused = Book::where('status', 'paused')->count();
+
+            $totalAbandoned = Book::where('status', 'abandoned')->count();
+
         return view('books.index', compact(
             'books',
             'totalBooks',
             'totalAuthors',
             'totalGenres',
-            'genres'
-        ));
+            'genres',
+            'totalWantToRead',
+            'totalReading',
+            'totalRead',
+            'totalPaused',
+            'totalAbandoned'
+));
     }
 
     public function create()
@@ -66,20 +93,20 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'author' => ['required', 'string', 'max:255'],
-            'genre' => ['nullable', 'string', 'max:100'],
-            'publication_year' => [
-                'nullable',
-                'integer',
-                'min:1000',
-                'max:' . date('Y'),
+               'title' => ['required', 'string', 'max:255'],
+                'author' => ['required', 'string', 'max:255'],
+                'genre' => ['nullable', 'string', 'max:255'],
+                'publication_year' => ['nullable', 'integer', 'min:1000', 'max:' . date('Y')],
+                'status' => [
+                    'required',
+                    'in:want_to_read,reading,read,paused,abandoned'
             ],
         ], [
             'title.required' => 'Informe o título do livro.',
             'author.required' => 'Informe o autor do livro.',
             'publication_year.min' => 'Informe um ano válido.',
             'publication_year.max' => 'O ano não pode ser maior que ' . date('Y') . '.',
+         
         ]);
 
         Book::create($validated);
@@ -109,14 +136,13 @@ class BookController extends Controller
     public function update(Request $request, Book $book)
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
+              'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
-            'genre' => ['nullable', 'string', 'max:100'],
-            'publication_year' => [
-                'nullable',
-                'integer',
-                'min:1000',
-                'max:' . date('Y'),
+            'genre' => ['nullable', 'string', 'max:255'],
+            'publication_year' => ['nullable', 'integer', 'min:1000', 'max:' . date('Y')],
+            'status' => [
+                'required',
+            'in:want_to_read,reading,read,paused,abandoned'
             ],
         ], [
             'title.required' => 'Informe o título do livro.',

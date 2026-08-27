@@ -154,7 +154,46 @@
             </div>
 
         </div>
+                    <div class="form-group">
 
+            <label for="status">
+                Status de leitura <span>*</span>
+            </label>
+
+            <select id="status" name="status" required>
+
+                <option value="want_to_read"
+                    @selected(old('status', $book->status) === 'want_to_read')}>
+                    📕 Quero ler
+                </option>
+
+                <option value="reading"
+                    @selected(old('status', $book->status) === 'reading')}>
+                    📖 Lendo
+                </option>
+
+                <option value="read"
+                    @selected(old('status', $book->status) === 'read')}>
+                    ✅ Lido
+                </option>
+
+                <option value="paused"
+                    @selected(old('status', $book->status) === 'paused')}>
+                    ⏸️ Pausado
+                </option>
+
+                <option value="abandoned"
+                    @selected(old('status', $book->status) === 'abandoned')}>
+                    ❌ Abandonei
+                </option>
+
+            </select>
+
+            @error('status')
+                <small>{{ $message }}</small>
+            @enderror
+
+        </div>
 
         <div class="form-actions">
 
