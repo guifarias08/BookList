@@ -91,7 +91,7 @@ class BookController extends Controller
     }
 
     public function store(Request $request)
-    {
+    {       dd($request->all());
         $validated = $request->validate([
                'title' => ['required', 'string', 'max:255'],
                 'author' => ['required', 'string', 'max:255'],
@@ -101,6 +101,12 @@ class BookController extends Controller
                     'required',
                     'in:want_to_read,reading,read,paused,abandoned'
             ],
+                    'rating' => [
+                'nullable',
+                'integer',
+                'min:1',
+                'max:5'
+                            ],             
         ], [
             'title.required' => 'Informe o título do livro.',
             'author.required' => 'Informe o autor do livro.',

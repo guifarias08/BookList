@@ -2720,4 +2720,57 @@ tbody tr:hover {
                 color: #dc2626;
                 background: #fee2e2;
 }
+.rating-input {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.star {
+    border: none;
+    background: transparent;
+    color: #d1d5db;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 0;
+    transition: 0.2s ease;
+}
+
+.star:hover {
+    transform: scale(1.15);
+    color: #f59e0b;
+}
+
+.star.active {
+    color: #f59e0b;
+}
+
+.rating-text {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+.table-rating {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.star-filled {
+    color: #f59e0b;
+    font-size: 16px;
+}
+
+.star-empty {
+    color: #d1d5db;
+    font-size: 16px;
+}
+
+.rating-number {
+    margin-left: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+}
 }

@@ -198,6 +198,7 @@
                         <th>Gênero</th>
                         <th>Publicação</th>
                         <th>Status</th>
+                        <th>Avaliação</th>
                         <th>Ações</th>
                     </tr>
 
@@ -337,6 +338,35 @@
                         </option>
 
                     </select>
+                                            <td>
+                            @if($book->rating)
+
+                                <div class="table-rating">
+
+                                    @for($i = 1; $i <= 5; $i++)
+
+                                        @if($i <= $book->rating)
+                                            <span class="star-filled">★</span>
+                                        @else
+                                            <span class="star-empty">★</span>
+                                        @endif
+
+                                    @endfor
+
+                                    <span class="rating-number">
+                                        {{ $book->rating }}/5
+                                    </span>
+
+                                </div>
+
+                            @else
+
+                                <span class="muted">
+                                    Sem avaliação
+                                </span>
+
+                            @endif
+                        </td>
                             <td>
 
                                 <div class="book-actions">
@@ -473,5 +503,5 @@
     @endif
 
 </section>
-
+       <script src="{{ asset('js/app.js') }}"></script>
 @endsection

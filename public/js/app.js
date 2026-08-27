@@ -327,5 +327,67 @@ function closeToast() {
         toast.remove();
 
     }, 250);
+    document.addEventListener('DOMContentLoaded', () => {
 
+    const ratingInput = document.getElementById('ratingInput');
+    const rating = document.getElementById('rating');
+    const ratingText = document.getElementById('ratingText');
+
+    if (!ratingInput || !rating) {
+        return;
+    }
+
+    const stars = ratingInput.querySelectorAll('.star');
+
+    function updateStars(value) {
+
+        stars.forEach(star => {
+
+            const starValue = Number(star.dataset.rating);
+
+            if (starValue <= value) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+
+        });
+
+        if (value > 0) {
+            ratingText.textContent = `${value}/5 estrelas`;
+        } else {
+            ratingText.textContent = 'Selecione uma nota';
+        }
+    }
+
+    stars.forEach(star => {
+
+        star.addEventListener('click', () => {
+
+            const value = Number(star.dataset.rating);
+
+            rating.value = value;
+
+            updateStars(value);
+
+        });
+
+        star.addEventListener('mouseenter', () => {
+
+            const value = Number(star.dataset.rating);
+
+            updateStars(value);
+
+        });
+
+    });
+
+    ratingInput.addEventListener('mouseleave', () => {
+
+        updateStars(Number(rating.value) || 0);
+
+    });
+
+    updateStars(Number(rating.value) || 0);
+});
 }

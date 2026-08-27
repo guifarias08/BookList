@@ -15,9 +15,11 @@ class Book extends Model
         'isbn',
         'cover',
         'status',
+        'rating',
     ];
-
+    
     protected $casts = [
         'publication_year' => 'integer',
+        'rating' => 'integer',
     ];
 }
