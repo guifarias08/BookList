@@ -1,358 +1,290 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('title', 'BookList - Minha Biblioteca')
 
-    <title>BookList - Minha Biblioteca</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-</head>
+@section('content')
 
-<body>
+<div class="page-header">
 
-<header class="navbar">
+    <div>
 
-    <div class="navbar-container">
+        <span class="eyebrow">
+            MINHA BIBLIOTECA
+        </span>
 
-        <a href="{{ route('books.index') }}" class="logo">
-            <span class="logo-icon">📚</span>
-            <span>BookList</span>
-        </a>
+        <h1 class="page-title">
+            Coleção de livros
+        </h1>
 
-        <nav class="nav-links">
-
-            <a
-                href="{{ route('books.index') }}"
-                class="nav-link active"
-            >
-                Início
-            </a>
-
-            <a
-                href="{{ route('books.index') }}"
-                class="nav-link"
-            >
-                Livros
-            </a>
-
-        </nav>
+        <p class="page-description">
+            Gerencie sua biblioteca de forma simples e organizada.
+        </p>
 
     </div>
 
-</header>
+    <a
+        href="{{ route('books.create') }}"
+        class="btn-primary"
+    >
+        <span>＋</span>
+        Adicionar livro
+    </a>
+
+</div>
 
 
-<main class="container">
+<section class="stats">
 
-    {{-- Mensagem de sucesso --}}
-    @if(session('success'))
+    <div class="stat-card">
 
-        <div class="success-message">
-            <span>✓</span>
-            {{ session('success') }}
+        <div class="stat-icon blue">
+            📚
         </div>
 
-    @endif
+        <div>
+            <div class="stat-label">
+                Total de livros
+            </div>
+
+            <div class="stat-value">
+                {{ $totalBooks }}
+            </div>
+        </div>
+
+    </div>
 
 
-    {{-- Erros --}}
-    @if($errors->any())
+    <div class="stat-card">
 
-        <div class="error-message">
+        <div class="stat-icon green">
+            ✍️
+        </div>
 
-            <strong>Verifique os dados:</strong>
+        <div>
+            <div class="stat-label">
+                Autores
+            </div>
 
-            <ul>
+            <div class="stat-value">
+                {{ $totalAuthors }}
+            </div>
+        </div>
 
-                @foreach($errors->all() as $error)
+    </div>
 
-                    <li>{{ $error }}</li>
 
-                @endforeach
+    <div class="stat-card">
 
-            </ul>
+        <div class="stat-icon purple">
+            🏷️
+        </div>
+
+        <div>
+            <div class="stat-label">
+                Gêneros
+            </div>
+
+            <div class="stat-value">
+                {{ $totalGenres }}
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="filters">
+
+    <div class="filter-form">
+
+        <div class="search-wrapper">
+
+            <span class="search-icon">
+                🔍
+            </span>
+
+            <input
+                type="search"
+                id="bookSearch"
+                class="search-input"
+                value="{{ request('search') }}"
+                placeholder="Buscar por título ou autor..."
+                autocomplete="off"
+            >
 
         </div>
 
-    @endif
+
+        <select
+            id="genreFilter"
+            class="select"
+        >
+
+            <option value="">
+                Todos os gêneros
+            </option>
+
+            @foreach($genres as $genre)
+
+                <option
+                    value="{{ strtolower($genre) }}"
+                    @selected(request('genre') === $genre)
+                >
+                    {{ $genre }}
+                </option>
+
+            @endforeach
+
+        </select>
 
 
-    {{-- Cabeçalho --}}
+        <button
+            type="button"
+            class="btn-search"
+            id="searchButton"
+        >
+            Buscar
+        </button>
 
-    <div class="page-header">
+
+        <a
+            href="{{ route('books.index') }}"
+            class="btn-clear"
+            id="clearFilters"
+        >
+            Limpar
+        </a>
+
+    </div>
+
+</section>
+
+
+<section class="table-card">
+
+    <div class="table-header">
 
         <div>
 
-            <span class="eyebrow">
-                MINHA BIBLIOTECA
+            <h2 class="table-title">
+                Livros
+            </h2>
+
+            <span
+                class="table-count"
+                id="resultCount"
+            >
+                {{ $books->total() }}
+                {{ $books->total() === 1 ? 'resultado' : 'resultados' }}
             </span>
 
-            <h1 class="page-title">
-                Coleção de livros
-            </h1>
-
-            <p class="page-description">
-                Gerencie sua biblioteca de forma simples e organizada.
-            </p>
-
         </div>
-
-        <a
-            href="{{ route('books.create') }}"
-            class="btn-primary"
-        >
-            <span>＋</span>
-            Adicionar livro
-        </a>
 
     </div>
 
 
-    {{-- Estatísticas --}}
+    @if($books->count())
 
-    <section class="stats">
+        <div class="table-wrapper">
 
-        <div class="stat-card">
+            <table>
 
-            <div class="stat-icon blue">
-                📚
-            </div>
+                <thead>
 
-            <div>
+                    <tr>
+                        <th>Livro</th>
+                        <th>Autor</th>
+                        <th>Gênero</th>
+                        <th>Publicação</th>
+                        <th>Ações</th>
+                    </tr>
 
-                <div class="stat-label">
-                    Total de livros
-                </div>
+                </thead>
 
-                <div class="stat-value">
-                    {{ $totalBooks }}
-                </div>
+                <tbody id="booksTable">
 
-            </div>
+                    @foreach($books as $book)
 
-        </div>
+                        <tr
+                            class="book-row"
+                            data-title="{{ strtolower($book->title) }}"
+                            data-author="{{ strtolower($book->author) }}"
+                            data-genre="{{ strtolower($book->genre ?? '') }}"
+                        >
 
+                            <td>
 
-        <div class="stat-card">
+                                <div class="book-info">
 
-            <div class="stat-icon green">
-                ✍️
-            </div>
+                                    <div class="book-icon">
+                                        📖
+                                    </div>
 
-            <div>
+                                    <div>
 
-                <div class="stat-label">
-                    Autores
-                </div>
-
-                <div class="stat-value">
-                    {{ $totalAuthors }}
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon purple">
-                🏷️
-            </div>
-
-            <div>
-
-                <div class="stat-label">
-                    Gêneros
-                </div>
-
-                <div class="stat-value">
-                    {{ $totalGenres }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    {{-- Busca --}}
-
-    <section class="filters">
-
-        <form
-            method="GET"
-            action="{{ route('books.index') }}"
-            class="filter-form"
-        >
-
-            <div class="search-wrapper">
-
-                <span class="search-icon">
-                    🔍
-                </span>
-
-                <input
-                    type="search"
-                    name="search"
-                    class="search-input"
-                    value="{{ request('search') }}"
-                    placeholder="Buscar por título ou autor..."
-                >
-
-            </div>
-
-
-            <select name="genre" class="select">
-
-                <option value="">
-                    Todos os gêneros
-                </option>
-
-                @foreach($genres as $genre)
-
-                    <option
-                        value="{{ $genre }}"
-                        @selected(request('genre') === $genre)
-                    >
-                        {{ $genre }}
-                    </option>
-
-                @endforeach
-
-            </select>
-
-
-            <button type="submit" class="btn-search">
-                Buscar
-            </button>
-
-
-            @if(request('search') || request('genre'))
-
-                <a
-                    href="{{ route('books.index') }}"
-                    class="btn-clear"
-                >
-                    Limpar
-                </a>
-
-            @endif
-
-        </form>
-
-    </section>
-
-
-    {{-- Tabela --}}
-
-    <section class="table-card">
-
-        <div class="table-header">
-
-            <div>
-
-                <h2 class="table-title">
-                    Livros
-                </h2>
-
-                <span class="table-count">
-                    {{ $books->total() }}
-                    {{ $books->total() === 1 ? 'resultado' : 'resultados' }}
-                </span>
-
-            </div>
-
-        </div>
-
-
-        @if($books->count())
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                            <tr>
-                                <th>Livro</th>
-                                <th>Autor</th>
-                                <th>Gênero</th>
-                                <th>Publicação</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-
-                    <tbody>
-
-                        @foreach($books as $book)
-
-                            <tr>
-
-                                <td>
-
-                                    <div class="book-info">
-
-                                        <div class="book-icon">
-                                            📖
+                                        <div class="book-title">
+                                            {{ $book->title }}
                                         </div>
 
-                                        <div>
-
-                                            <div class="book-title">
-                                                {{ $book->title }}
-                                            </div>
-
+                                        <div class="book-subtitle">
+                                            Livro
                                         </div>
 
                                     </div>
 
-                                </td>
+                                </div>
+
+                            </td>
 
 
-                                <td class="author">
-                                    {{ $book->author }}
-                                </td>
+                            <td class="author">
+                                {{ $book->author }}
+                            </td>
 
 
-                                <td>
+                            <td>
 
-                                    @if($book->genre)
+                                @if($book->genre)
 
-                                        <span class="badge">
-                                            {{ $book->genre }}
-                                        </span>
+                                    <span class="badge">
+                                        {{ $book->genre }}
+                                    </span>
 
-                                    @else
+                                @else
 
-                                        <span class="muted">
-                                            —
-                                        </span>
+                                    <span class="muted">
+                                        —
+                                    </span>
 
-                                    @endif
+                                @endif
 
-                                </td>
+                            </td>
 
 
-                              <td class="year">
-                             {{ $book->publication_year ?? '—' }}
-                              </td>
-                                <td>
+                            <td class="year">
+                                {{ $book->publication_year ?? '—' }}
+                            </td>
+
+
+                            <td>
+
                                 <div class="book-actions">
 
                                     <a
                                         href="{{ route('books.edit', $book) }}"
-                                        class="btn-edit"
+                                        class="action-button edit"
+                                        title="Editar livro"
                                     >
-                                        ✏️ Editar
+                                        <span>✏️</span>
+                                        <span>Editar</span>
                                     </a>
+
 
                                     <form
                                         action="{{ route('books.destroy', $book) }}"
                                         method="POST"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir este livro?')"
+                                        class="delete-form"
                                     >
 
                                         @csrf
@@ -360,111 +292,116 @@
 
                                         <button
                                             type="submit"
-                                            class="btn-delete"
+                                            class="action-button delete"
+                                            title="Excluir livro"
                                         >
-                                            🗑️ Excluir
+                                            <span>🗑️</span>
+                                            <span>Excluir</span>
                                         </button>
 
                                     </form>
 
                                 </div>
+
                             </td>
-                            </tr>
 
-                        @endforeach
+                        </tr>
 
-                    </tbody>
+                    @endforeach
 
-                </table>
+                </tbody>
 
-            </div>
+            </table>
 
-
-            {{-- Paginação --}}
-
-            @if($books->hasPages())
-
-                <div class="pagination">
-
-                    @if($books->onFirstPage())
-
-                        <span class="page-disabled">
-                            ← Anterior
-                        </span>
-
-                    @else
-
-                        <a
-                            href="{{ $books->previousPageUrl() }}"
-                            class="page-link"
-                        >
-                            ← Anterior
-                        </a>
-
-                    @endif
+        </div>
 
 
-                    <span class="page-current">
-                        Página {{ $books->currentPage() }}
-                        de {{ $books->lastPage() }}
+        @if($books->hasPages())
+
+            <div class="pagination">
+
+                @if($books->onFirstPage())
+
+                    <span class="page-disabled">
+                        ← Anterior
                     </span>
 
+                @else
 
-                    @if($books->hasMorePages())
+                    <a
+                        href="{{ $books->previousPageUrl() }}"
+                        class="page-link"
+                    >
+                        ← Anterior
+                    </a>
 
-                        <a
-                            href="{{ $books->nextPageUrl() }}"
-                            class="page-link"
-                        >
-                            Próxima →
-                        </a>
+                @endif
 
-                    @else
 
-                        <span class="page-disabled">
-                            Próxima →
-                        </span>
+                <span class="page-current">
+                    Página {{ $books->currentPage() }}
+                    de {{ $books->lastPage() }}
+                </span>
 
-                    @endif
 
-                </div>
+                @if($books->hasMorePages())
 
-            @endif
+                    <a
+                        href="{{ $books->nextPageUrl() }}"
+                        class="page-link"
+                    >
+                        Próxima →
+                    </a>
 
-        @else
+                @else
 
-            <div class="empty">
+                    <span class="page-disabled">
+                        Próxima →
+                    </span>
 
-                <div class="empty-icon">
-                    📚
-                </div>
-
-                <h3 class="empty-title">
-                    Nenhum livro encontrado
-                </h3>
-
-                <p class="empty-text">
-                    @if(request('search') || request('genre'))
-                        Tente alterar os filtros da busca.
-                    @else
-                        Sua biblioteca ainda está vazia.
-                    @endif
-                </p>
-
-                <a
-                    href="{{ route('books.create') }}"
-                    class="btn-primary empty-button"
-                >
-                    ＋ Adicionar primeiro livro
-                </a>
+                @endif
 
             </div>
 
         @endif
 
-    </section>
+    @else
 
-</main>
+        <div class="empty">
 
-</body>
-</html>
+            <div class="empty-icon">
+                📚
+            </div>
+
+            <h3 class="empty-title">
+                Nenhum livro encontrado
+            </h3>
+
+            <p class="empty-text">
+
+                @if(request('search') || request('genre'))
+
+                    Tente alterar os filtros da busca.
+
+                @else
+
+                    Sua biblioteca ainda está vazia.
+
+                @endif
+
+            </p>
+
+            <a
+                href="{{ route('books.create') }}"
+                class="btn-primary empty-button"
+            >
+                ＋ Adicionar primeiro livro
+            </a>
+
+        </div>
+
+    @endif
+
+</section>
+
+@endsection

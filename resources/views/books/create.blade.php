@@ -1,212 +1,180 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+@extends('layouts.app')
 
-<head>
+@section('title', 'Adicionar livro | BookList')
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@section('content')
 
-    <title>Adicionar livro | BookList</title>
+<div class="page-header">
 
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <div>
 
-</head>
+        <span class="eyebrow">
+            NOVO LIVRO
+        </span>
 
-<body>
+        <h1 class="page-title">
+            Adicionar livro
+        </h1>
 
-<header class="navbar">
-
-    <div class="navbar-container">
-
-        <a
-            href="{{ route('books.index') }}"
-            class="logo"
-        >
-            <span class="logo-icon">📚</span>
-            BookList
-        </a>
+        <p class="page-description">
+            Cadastre um novo livro na sua biblioteca.
+        </p>
 
     </div>
 
-</header>
+    <a
+        href="{{ route('books.index') }}"
+        class="btn-clear"
+    >
+        ← Voltar
+    </a>
+
+</div>
 
 
-<main class="container">
+<section class="form-card">
 
-    <div class="page-header">
+    <div class="form-heading">
+
+        <div class="form-heading-icon">
+            📚
+        </div>
 
         <div>
 
-            <span class="eyebrow">
-                NOVO LIVRO
-            </span>
+            <h2>Informações do livro</h2>
 
-            <h1 class="page-title">
-                Adicionar livro
-            </h1>
-
-            <p class="page-description">
-                Cadastre um novo livro na sua biblioteca.
+            <p>
+                Preencha os dados abaixo para adicionar um novo livro.
             </p>
 
         </div>
 
-        <a
-            href="{{ route('books.index') }}"
-            class="btn-clear"
-        >
-            ← Voltar
-        </a>
-
     </div>
 
 
-    @if($errors->any())
+    <form
+        action="{{ route('books.store') }}"
+        method="POST"
+        id="bookForm"
+    >
 
-        <div class="error-message">
+        @csrf
 
-            <strong>Corrija os seguintes erros:</strong>
 
-            <ul>
+        <div class="form-grid">
 
-                @foreach($errors->all() as $error)
+            <div class="form-group full">
 
-                    <li>{{ $error }}</li>
+                <label for="title">
+                    Título <span>*</span>
+                </label>
 
-                @endforeach
+                <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    value="{{ old('title') }}"
+                    placeholder="Ex.: O Grande Gatsby"
+                    required
+                    autofocus
+                >
 
-            </ul>
+                @error('title')
+                    <small>{{ $message }}</small>
+                @enderror
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="author">
+                    Autor <span>*</span>
+                </label>
+
+                <input
+                    id="author"
+                    name="author"
+                    type="text"
+                    value="{{ old('author') }}"
+                    placeholder="Ex.: F. Scott Fitzgerald"
+                    required
+                >
+
+                @error('author')
+                    <small>{{ $message }}</small>
+                @enderror
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="genre">
+                    Gênero
+                </label>
+
+                <input
+                    id="genre"
+                    name="genre"
+                    type="text"
+                    value="{{ old('genre') }}"
+                    placeholder="Ex.: Ficção"
+                >
+
+                @error('genre')
+                    <small>{{ $message }}</small>
+                @enderror
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="publication_year">
+                    Ano de publicação
+                </label>
+
+                <input
+                    id="publication_year"
+                    name="publication_year"
+                    type="number"
+                    value="{{ old('publication_year') }}"
+                    placeholder="Ex.: 1925"
+                    min="1000"
+                    max="{{ date('Y') }}"
+                >
+
+                @error('publication_year')
+                    <small>{{ $message }}</small>
+                @enderror
+
+            </div>
 
         </div>
 
-    @endif
 
+        <div class="form-actions">
 
-    <section class="form-card">
+            <a
+                href="{{ route('books.index') }}"
+                class="btn-cancel"
+            >
+                Cancelar
+            </a>
 
-        <form
-            action="{{ route('books.store') }}"
-            method="POST"
-        >
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                ✓ Salvar livro
+            </button>
 
-            @csrf
+        </div>
 
-            <div class="form-grid">
+    </form>
 
-                <div class="form-group full">
+</section>
 
-                    <label for="title">
-                        Título <span>*</span>
-                    </label>
-
-                    <input
-                        id="title"
-                        name="title"
-                        type="text"
-                        value="{{ old('title') }}"
-                        placeholder="Ex.: O Grande Gatsby"
-                        required
-                    >
-
-                    @error('title')
-                        <small>{{ $message }}</small>
-                    @enderror
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="author">
-                        Autor <span>*</span>
-                    </label>
-
-                    <input
-                        id="author"
-                        name="author"
-                        type="text"
-                        value="{{ old('author') }}"
-                        placeholder="Ex.: F. Scott Fitzgerald"
-                        required
-                    >
-
-                    @error('author')
-                        <small>{{ $message }}</small>
-                    @enderror
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="genre">
-                        Gênero
-                    </label>
-
-                    <input
-                        id="genre"
-                        name="genre"
-                        type="text"
-                        value="{{ old('genre') }}"
-                        placeholder="Ex.: Ficção"
-                    >
-
-                    @error('genre')
-                        <small>{{ $message }}</small>
-                    @enderror
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="publication_year">
-                        Ano de publicação
-                    </label>
-
-                    <input
-                        id="publication_year"
-                        name="publication_year"
-                        type="number"
-                        value="{{ old('publication_year') }}"
-                        placeholder="Ex.: 1925"
-                        min="1000"
-                        max="{{ date('Y') }}"
-                    >
-
-                    @error('publication_year')
-                        <small>{{ $message }}</small>
-                    @enderror
-
-                </div>
-
-            </div>
-
-
-            <div class="form-actions">
-
-                <a
-                    href="{{ route('books.index') }}"
-                    class="btn-cancel"
-                >
-                    Cancelar
-                </a>
-
-                <button
-                    type="submit"
-                    class="btn-primary"
-                >
-                    ✓ Salvar livro
-                </button>
-
-            </div>
-
-        </form>
-
-    </section>
-
-</main>
-
-</body>
-</html>
+@endsection

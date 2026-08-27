@@ -55,6 +55,7 @@ return new class extends Migration
             'genre',
             'year',
             'description',
+            'publication_year',
             'isbn',
             'cover',
             'status',
