@@ -338,35 +338,42 @@
                         </option>
 
                     </select>
-                                            <td>
+                            <td>
+                    <form
+                        action="{{ route('books.rating', $book) }}"
+                        method="POST"
+                        class="rating-form"
+                    >
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="table-rating">
+
+                            @for($i = 1; $i <= 5; $i++)
+
+                                <button
+                                    type="submit"
+                                    name="rating"
+                                    value="{{ $i }}"
+                                    class="star-button {{ $book->rating >= $i ? 'star-filled' : 'star-empty' }}"
+                                    title="Avaliar com {{ $i }} estrelas"
+                                >
+                                    ★
+                                </button>
+
+                            @endfor
+
                             @if($book->rating)
-
-                                <div class="table-rating">
-
-                                    @for($i = 1; $i <= 5; $i++)
-
-                                        @if($i <= $book->rating)
-                                            <span class="star-filled">★</span>
-                                        @else
-                                            <span class="star-empty">★</span>
-                                        @endif
-
-                                    @endfor
-
-                                    <span class="rating-number">
-                                        {{ $book->rating }}/5
-                                    </span>
-
-                                </div>
-
-                            @else
-
-                                <span class="muted">
-                                    Sem avaliação
+                                <span class="rating-number">
+                                    {{ $book->rating }}/5
                                 </span>
-
                             @endif
-                        </td>
+
+                        </div>
+
+                    </form>
+                </td>
+
                             <td>
 
                                 <div class="book-actions">

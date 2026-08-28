@@ -81,7 +81,8 @@ class BookController extends Controller
             'totalReading',
             'totalRead',
             'totalPaused',
-            'totalAbandoned'
+            'totalAbandoned',
+            
 ));
     }
 
@@ -91,7 +92,7 @@ class BookController extends Controller
     }
 
     public function store(Request $request)
-    {       dd($request->all());
+    {       //dd($request->all());
         $validated = $request->validate([
                'title' => ['required', 'string', 'max:255'],
                 'author' => ['required', 'string', 'max:255'],
@@ -163,6 +164,21 @@ class BookController extends Controller
             ->route('books.index')
             ->with('success', 'Livro atualizado com sucesso!');
     }
+    
+            public function rating(Request $request, Book $book)
+                {
+                    $validated = $request->validate([
+                        'rating' => ['required', 'integer', 'between:1,5'],
+                    ]);
+
+                    $book->update([
+                        'rating' => $validated['rating'],
+                    ]);
+
+                    return redirect()
+                        ->back()
+                        ->with('success', 'Avaliação atualizada com sucesso!');
+                }
 
     /*
     |--------------------------------------------------------------------------

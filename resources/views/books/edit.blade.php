@@ -194,48 +194,7 @@
             @enderror
 
                     </div>
-                    <div class="form-group">
-
-                <label>
-                    Avaliação
-                </label>
-
-                <div class="rating-input" id="ratingInput">
-
-                    @for($i = 1; $i <= 5; $i++)
-
-                        <button
-                            type="button"
-                            class="star"
-                            data-rating="{{ $i }}"
-                        >
-                            ★
-                        </button>
-
-                    @endfor
-
-                </div>
-
-                <input
-                    type="hidden"
-                    name="rating"
-                    id="rating"
-                    value="{{ old('rating', $book->rating) }}"
-                >
-
-                <span id="ratingText" class="rating-text">
-                    @if($book->rating)
-                        {{ $book->rating }}/5 estrelas
-                    @else
-                        Selecione uma nota
-                    @endif
-                </span>
-
-                @error('rating')
-                    <small>{{ $message }}</small>
-                @enderror
-
-            </div>
+                   
         <div class="form-actions">
 
             <a
