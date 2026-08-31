@@ -1,4 +1,3 @@
-//
 document.addEventListener("DOMContentLoaded", () => {
 
     /*
@@ -11,148 +10,151 @@ document.addEventListener("DOMContentLoaded", () => {
     const navLinks = document.getElementById("navLinks");
 
     if (menuButton && navLinks) {
-
         menuButton.addEventListener("click", () => {
-
             navLinks.classList.toggle("active");
-
         });
-
     }
 
 
     /*
     |--------------------------------------------------------------------------
-    | BUSCA DE LIVROS
+    | DARK MODE
     |--------------------------------------------------------------------------
     */
 
-    const searchInput = document.getElementById("bookSearch");
-    const genreFilter = document.getElementById("genreFilter");
-    const searchButton = document.getElementById("searchButton");
-    const resultCount = document.getElementById("resultCount");
+    const themeToggle = document.getElementById("themeToggle");
 
-    const rows = Array.from(
-        document.querySelectorAll(".book-row")
-    );
+    const savedTheme = localStorage.getItem("booklist-theme");
 
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-theme");
+    }
 
-    function filterBooks() {
+    updateThemeIcon();
 
-        if (!searchInput || !genreFilter) {
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+
+            document.body.classList.toggle("dark-theme");
+
+            const theme = document.body.classList.contains("dark-theme")
+                ? "dark"
+                : "light";
+
+            localStorage.setItem("booklist-theme", theme);
+
+            updateThemeIcon();
+        });
+    }
+
+    function updateThemeIcon() {
+        if (!themeToggle) {
             return;
         }
 
-        const search = searchInput.value
-            .toLowerCase()
-            .trim();
-
-        const genre = genreFilter.value
-            .toLowerCase();
-
-
-        let visible = 0;
+        themeToggle.textContent =
+            document.body.classList.contains("dark-theme")
+                ? "☀️"
+                : "🌙";
+    }
 
 
-        rows.forEach(row => {
+    /*
+    |--------------------------------------------------------------------------
+    | PRÉVIA DA CAPA
+    |--------------------------------------------------------------------------
+    */
 
-            const title =
-                row.dataset.title || "";
+    const coverInput = document.getElementById("cover");
+    const coverPreview = document.getElementById("coverPreview");
+    const coverPlaceholder = document.getElementById("coverPlaceholder");
 
-            const author =
-                row.dataset.author || "";
+    if (coverInput && coverPreview) {
 
-            const rowGenre =
-                row.dataset.genre || "";
+        coverInput.addEventListener("change", (event) => {
 
+            const file = event.target.files[0];
 
-            const matchesSearch =
-                title.includes(search) ||
-                author.includes(search);
-
-
-            const matchesGenre =
-                !genre ||
-                rowGenre === genre;
-
-
-            const visibleRow =
-                matchesSearch &&
-                matchesGenre;
-
-
-            if (visibleRow) {
-
-                row.style.display = "";
-                visible++;
-
-                row.animate(
-                    [
-                        {
-                            opacity: 0.5,
-                            transform: "translateY(3px)"
-                        },
-                        {
-                            opacity: 1,
-                            transform: "translateY(0)"
-                        }
-                    ],
-                    {
-                        duration: 180,
-                        easing: "ease-out"
-                    }
-                );
-
-            } else {
-
-                row.style.display = "none";
-
+            if (!file) {
+                return;
             }
 
+            if (!file.type.startsWith("image/")) {
+                alert("Selecione uma imagem válida.");
+                coverInput.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+
+                coverPreview.src = event.target.result;
+
+                coverPreview.classList.remove("hidden");
+
+                if (coverPlaceholder) {
+                    coverPlaceholder.classList.add("hidden");
+                }
+            };
+
+            reader.readAsDataURL(file);
         });
+    }
 
 
-        if (resultCount) {
+    /*
+    |--------------------------------------------------------------------------
+    | GRID / LISTA
+    |--------------------------------------------------------------------------
+    */
 
-            resultCount.textContent =
-                `${visible} ${
-                    visible === 1
-                        ? "resultado"
-                        : "resultados"
-                }`;
+    const booksContainer = document.getElementById("booksContainer");
 
+    const gridViewButton = document.getElementById("gridViewButton");
+    const listViewButton = document.getElementById("listViewButton");
+
+    const savedView =
+        localStorage.getItem("booklist-view") || "grid";
+
+    setBookView(savedView);
+
+    if (gridViewButton) {
+        gridViewButton.addEventListener("click", () => {
+            setBookView("grid");
+        });
+    }
+
+    if (listViewButton) {
+        listViewButton.addEventListener("click", () => {
+            setBookView("list");
+        });
+    }
+
+    function setBookView(view) {
+
+        if (!booksContainer) {
+            return;
         }
 
-    }
+        if (view === "list") {
 
+            booksContainer.classList.remove("books-grid");
+            booksContainer.classList.add("books-list");
 
-    if (searchInput) {
+            gridViewButton?.classList.remove("active");
+            listViewButton?.classList.add("active");
 
-        searchInput.addEventListener(
-            "input",
-            filterBooks
-        );
+        } else {
 
-    }
+            booksContainer.classList.remove("books-list");
+            booksContainer.classList.add("books-grid");
 
+            listViewButton?.classList.remove("active");
+            gridViewButton?.classList.add("active");
+        }
 
-    if (genreFilter) {
-
-        genreFilter.addEventListener(
-            "change",
-            filterBooks
-        );
-
-    }
-
-
-    if (searchButton) {
-
-        searchButton.addEventListener(
-            "click",
-            filterBooks
-        );
-
+        localStorage.setItem("booklist-view", view);
     }
 
 
@@ -162,23 +164,21 @@ document.addEventListener("DOMContentLoaded", () => {
     |--------------------------------------------------------------------------
     */
 
-    const deleteModal =
-        document.getElementById("deleteModal");
-
-    const cancelDelete =
-        document.getElementById("cancelDelete");
-
-    const confirmDelete =
-        document.getElementById("confirmDelete");
+    const deleteModal = document.getElementById("deleteModal");
+    const cancelDelete = document.getElementById("cancelDelete");
+    const confirmDelete = document.getElementById("confirmDelete");
 
     let formToDelete = null;
 
-
     document
         .querySelectorAll(".delete-form")
-        .forEach(form => {
+        .forEach((form) => {
 
-            form.addEventListener("submit", event => {
+            form.addEventListener("submit", (event) => {
+
+                if (!deleteModal) {
+                    return;
+                }
 
                 event.preventDefault();
 
@@ -190,9 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "aria-hidden",
                     "false"
                 );
-
             });
-
         });
 
 
@@ -210,35 +208,26 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         formToDelete = null;
-
     }
 
 
     if (cancelDelete) {
-
         cancelDelete.addEventListener(
             "click",
             closeDeleteModal
         );
-
     }
 
 
     if (confirmDelete) {
 
-        confirmDelete.addEventListener(
-            "click",
-            () => {
+        confirmDelete.addEventListener("click", () => {
 
-                if (formToDelete) {
-
-                    formToDelete.submit();
-
-                }
-
+            if (formToDelete) {
+                formToDelete.submit();
             }
-        );
 
+        });
     }
 
 
@@ -246,33 +235,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         deleteModal.addEventListener(
             "click",
-            event => {
+            (event) => {
 
-                if (
-                    event.target === deleteModal
-                ) {
-
+                if (event.target === deleteModal) {
                     closeDeleteModal();
-
                 }
 
             }
         );
-
     }
 
 
     document.addEventListener(
         "keydown",
-        event => {
+        (event) => {
 
             if (
                 event.key === "Escape" &&
                 deleteModal?.classList.contains("active")
             ) {
-
                 closeDeleteModal();
-
             }
 
         }
@@ -288,15 +270,112 @@ document.addEventListener("DOMContentLoaded", () => {
     const toast =
         document.getElementById("successToast");
 
-
     if (toast) {
 
         setTimeout(() => {
-
             closeToast();
-
         }, 4500);
 
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESTRELAS DO FORMULÁRIO
+    |--------------------------------------------------------------------------
+    */
+
+    const ratingInput =
+        document.getElementById("ratingInput");
+
+    const rating =
+        document.getElementById("rating");
+
+    const ratingText =
+        document.getElementById("ratingText");
+
+
+    if (ratingInput && rating) {
+
+        const stars =
+            ratingInput.querySelectorAll(".star");
+
+
+        function updateStars(value) {
+
+            stars.forEach((star) => {
+
+                const starValue =
+                    Number(star.dataset.rating);
+
+                if (starValue <= value) {
+
+                    star.classList.add("active");
+
+                } else {
+
+                    star.classList.remove("active");
+
+                }
+
+            });
+
+
+            if (ratingText) {
+
+                ratingText.textContent =
+                    value > 0
+                        ? `${value}/5 estrelas`
+                        : "Selecione uma nota";
+
+            }
+
+        }
+
+
+        stars.forEach((star) => {
+
+            star.addEventListener("click", () => {
+
+                const value =
+                    Number(star.dataset.rating);
+
+                rating.value = value;
+
+                updateStars(value);
+
+            });
+
+
+            star.addEventListener(
+                "mouseenter",
+                () => {
+
+                    updateStars(
+                        Number(star.dataset.rating)
+                    );
+
+                }
+            );
+
+        });
+
+
+        ratingInput.addEventListener(
+            "mouseleave",
+            () => {
+
+                updateStars(
+                    Number(rating.value) || 0
+                );
+
+            }
+        );
+
+
+        updateStars(
+            Number(rating.value) || 0
+        );
     }
 
 });
@@ -323,71 +402,6 @@ function closeToast() {
         "translateX(30px)";
 
     setTimeout(() => {
-
         toast.remove();
-
     }, 250);
-    document.addEventListener('DOMContentLoaded', () => {
-
-    const ratingInput = document.getElementById('ratingInput');
-    const rating = document.getElementById('rating');
-    const ratingText = document.getElementById('ratingText');
-
-    if (!ratingInput || !rating) {
-        return;
-    }
-
-    const stars = ratingInput.querySelectorAll('.star');
-
-    function updateStars(value) {
-
-        stars.forEach(star => {
-
-            const starValue = Number(star.dataset.rating);
-
-            if (starValue <= value) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
-
-        });
-
-        if (value > 0) {
-            ratingText.textContent = `${value}/5 estrelas`;
-        } else {
-            ratingText.textContent = 'Selecione uma nota';
-        }
-    }
-
-    stars.forEach(star => {
-
-        star.addEventListener('click', () => {
-
-            const value = Number(star.dataset.rating);
-
-            rating.value = value;
-
-            updateStars(value);
-
-        });
-
-        star.addEventListener('mouseenter', () => {
-
-            const value = Number(star.dataset.rating);
-
-            updateStars(value);
-
-        });
-
-    });
-
-    ratingInput.addEventListener('mouseleave', () => {
-
-        updateStars(Number(rating.value) || 0);
-
-    });
-
-    updateStars(Number(rating.value) || 0);
-});
 }

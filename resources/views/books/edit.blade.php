@@ -17,7 +17,7 @@
         </h1>
 
         <p class="page-description">
-            Atualize as informações do livro.
+            Atualize as informações da sua leitura.
         </p>
 
     </div>
@@ -42,10 +42,12 @@
 
         <div>
 
-            <h2>Editando: {{ $book->title }}</h2>
+            <h2>
+                {{ $book->title }}
+            </h2>
 
             <p>
-                Altere as informações abaixo e salve as alterações.
+                Atualize os dados abaixo.
             </p>
 
         </div>
@@ -56,145 +58,269 @@
     <form
         action="{{ route('books.update', $book) }}"
         method="POST"
-        id="bookForm"
+        enctype="multipart/form-data"
     >
 
         @csrf
         @method('PUT')
 
 
-        <div class="form-grid">
+        <div class="book-form-layout">
 
-            <div class="form-group full">
 
-                <label for="title">
-                    Título <span>*</span>
+            <div class="cover-upload-area">
+
+                <div class="cover-preview">
+
+                    @if($book->cover)
+
+                        <img
+                            id="coverPreview"
+                            class="cover-preview-image"
+                            src="{{ asset('storage/' . $book->cover) }}"
+                            alt="{{ $book->title }}"
+                        >
+
+                        <div
+                            id="coverPlaceholder"
+                            class="cover-placeholder hidden"
+                        >
+                            📚
+                        </div>
+
+                    @else
+
+                        <img
+                            id="coverPreview"
+                            class="cover-preview-image hidden"
+                            alt="Prévia"
+                        >
+
+                        <div
+                            id="coverPlaceholder"
+                            class="cover-placeholder"
+                        >
+                            📚
+
+                            <span>
+                                Sem capa
+                            </span>
+                        </div>
+
+                    @endif
+
+                </div>
+
+
+                <label
+                    for="cover"
+                    class="cover-upload-button"
+                >
+                    📷 Alterar capa
                 </label>
 
                 <input
-                    id="title"
-                    name="title"
-                    type="text"
-                    value="{{ old('title', $book->title) }}"
-                    placeholder="Ex.: O Grande Gatsby"
-                    required
-                    autofocus
+                    id="cover"
+                    name="cover"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    class="hidden"
                 >
-
-                @error('title')
-                    <small>{{ $message }}</small>
-                @enderror
 
             </div>
 
 
-            <div class="form-group">
+            <div class="form-grid">
 
-                <label for="author">
-                    Autor <span>*</span>
-                </label>
+                <div class="form-group full">
 
-                <input
-                    id="author"
-                    name="author"
-                    type="text"
-                    value="{{ old('author', $book->author) }}"
-                    placeholder="Ex.: F. Scott Fitzgerald"
-                    required
-                >
+                    <label for="title">
+                        Título *
+                    </label>
 
-                @error('author')
-                    <small>{{ $message }}</small>
-                @enderror
+                    <input
+                        id="title"
+                        name="title"
+                        type="text"
+                        value="{{ old('title', $book->title) }}"
+                        required
+                    >
 
-            </div>
+                </div>
 
 
-            <div class="form-group">
+                <div class="form-group">
 
-                <label for="genre">
-                    Gênero
-                </label>
+                    <label for="author">
+                        Autor *
+                    </label>
 
-                <input
-                    id="genre"
-                    name="genre"
-                    type="text"
-                    value="{{ old('genre', $book->genre) }}"
-                    placeholder="Ex.: Ficção"
-                >
+                    <input
+                        id="author"
+                        name="author"
+                        type="text"
+                        value="{{ old('author', $book->author) }}"
+                        required
+                    >
 
-                @error('genre')
-                    <small>{{ $message }}</small>
-                @enderror
-
-            </div>
+                </div>
 
 
-            <div class="form-group">
+                <div class="form-group">
 
-                <label for="publication_year">
-                    Ano de publicação
-                </label>
+                    <label for="genre">
+                        Gênero
+                    </label>
 
-                <input
-                    id="publication_year"
-                    name="publication_year"
-                    type="number"
-                    value="{{ old('publication_year', $book->publication_year) }}"
-                    placeholder="Ex.: 1925"
-                    min="1000"
-                    max="{{ date('Y') }}"
-                >
+                    <input
+                        id="genre"
+                        name="genre"
+                        type="text"
+                        value="{{ old('genre', $book->genre) }}"
+                    >
 
-                @error('publication_year')
-                    <small>{{ $message }}</small>
-                @enderror
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="publication_year">
+                        Ano
+                    </label>
+
+                    <input
+                        id="publication_year"
+                        name="publication_year"
+                        type="number"
+                        value="{{ old('publication_year', $book->publication_year) }}"
+                        min="1000"
+                        max="{{ date('Y') }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="isbn">
+                        ISBN
+                    </label>
+
+                    <input
+                        id="isbn"
+                        name="isbn"
+                        type="text"
+                        value="{{ old('isbn', $book->isbn) }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                        required
+                    >
+
+                        <option
+                            value="want_to_read"
+                            @selected(old('status', $book->status) === 'want_to_read')
+                        >
+                            📕 Quero ler
+                        </option>
+
+                        <option
+                            value="reading"
+                            @selected(old('status', $book->status) === 'reading')
+                        >
+                            📖 Lendo
+                        </option>
+
+                        <option
+                            value="read"
+                            @selected(old('status', $book->status) === 'read')
+                        >
+                            ✅ Lido
+                        </option>
+
+                        <option
+                            value="paused"
+                            @selected(old('status', $book->status) === 'paused')
+                        >
+                            ⏸️ Pausado
+                        </option>
+
+                        <option
+                            value="abandoned"
+                            @selected(old('status', $book->status) === 'abandoned')
+                        >
+                            ❌ Abandonei
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="pages">
+                        Total de páginas
+                    </label>
+
+                    <input
+                        id="pages"
+                        name="pages"
+                        type="number"
+                        min="1"
+                        value="{{ old('pages', $book->pages) }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="current_page">
+                        Página atual
+                    </label>
+
+                    <input
+                        id="current_page"
+                        name="current_page"
+                        type="number"
+                        min="0"
+                        value="{{ old('current_page', $book->current_page) }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="description">
+                        Sinopse / Anotações
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="6"
+                    >{{ old('description', $book->description) }}</textarea>
+
+                </div>
 
             </div>
 
         </div>
-                    <div class="form-group">
 
-            <label for="status">
-                Status de leitura <span>*</span>
-            </label>
 
-            <select id="status" name="status" required>
-
-                <option value="want_to_read"
-                    @selected(old('status', $book->status) === 'want_to_read')}>
-                    📕 Quero ler
-                </option>
-
-                <option value="reading"
-                    @selected(old('status', $book->status) === 'reading')}>
-                    📖 Lendo
-                </option>
-
-                <option value="read"
-                    @selected(old('status', $book->status) === 'read')}>
-                    ✅ Lido
-                </option>
-
-                <option value="paused"
-                    @selected(old('status', $book->status) === 'paused')}>
-                    ⏸️ Pausado
-                </option>
-
-                <option value="abandoned"
-                    @selected(old('status', $book->status) === 'abandoned')}>
-                    ❌ Abandonei
-                </option>
-
-            </select>
-
-            @error('status')
-                <small>{{ $message }}</small>
-            @enderror
-
-                    </div>
-                   
         <div class="form-actions">
 
             <a
@@ -216,5 +342,5 @@
     </form>
 
 </section>
-       <script src="{{ asset('js/app.js') }}"></script>
+
 @endsection

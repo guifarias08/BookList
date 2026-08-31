@@ -3,8 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 
-Route::patch('/books/{book}/rating', [BookController::class, 'rating'])
-    ->name('books.rating');
+Route::get('/', function () {
+    return redirect()->route('books.index');
+});
 
-Route::resource('books', BookController::class)
-    ->except(['show']);
+Route::patch(
+    '/books/{book}/rating',
+    [BookController::class, 'rating']
+)->name('books.rating');
+
+Route::patch(
+    '/books/{book}/favorite',
+    [BookController::class, 'favorite']
+)->name('books.favorite');
+
+Route::resource('books', BookController::class);

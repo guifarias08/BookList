@@ -3,12 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>@yield('title', 'BookList')</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -31,8 +43,13 @@
             href="{{ route('books.index') }}"
             class="logo"
         >
-            <span class="logo-icon">📚</span>
-            <span>BookList</span>
+            <span class="logo-icon">
+                📚
+            </span>
+
+            <span>
+                BookList
+            </span>
         </a>
 
         <button
@@ -44,21 +61,33 @@
             ☰
         </button>
 
-        <nav class="nav-links" id="navLinks">
+        <nav
+            class="nav-links"
+            id="navLinks"
+        >
 
             <a
                 href="{{ route('books.index') }}"
-                class="nav-link {{ request()->routeIs('books.index') ? 'active' : '' }}"
+                class="nav-link {{ request()->routeIs('books.index') && !request('status') && !request('favorites') ? 'active' : '' }}"
             >
                 Início
             </a>
-
+            
             <a
-                href="{{ route('books.index') }}"
-                class="nav-link {{ request()->routeIs('books.*') && !request()->routeIs('books.index') ? 'active' : '' }}"
+                href="{{ route('books.index', ['favorites' => 1]) }}"
+                class="nav-link {{ request('favorites') ? 'active' : '' }}"
             >
-                Livros
+                ❤️ Favoritos
             </a>
+
+            <button
+                type="button"
+                id="themeToggle"
+                class="theme-toggle"
+                title="Alterar tema"
+            >
+                🌙
+            </button>
 
         </nav>
 
@@ -71,9 +100,14 @@
 
     @if(session('success'))
 
-        <div class="toast toast-success" id="successToast">
+        <div
+            class="toast toast-success"
+            id="successToast"
+        >
 
-            <span class="toast-icon">✓</span>
+            <span class="toast-icon">
+                ✓
+            </span>
 
             <div>
                 <strong>Sucesso!</strong>
@@ -97,18 +131,20 @@
 
         <div class="alert alert-error">
 
-            <div class="alert-icon">!</div>
+            <div class="alert-icon">
+                !
+            </div>
 
             <div>
 
-                <strong>Verifique os dados</strong>
+                <strong>
+                    Verifique os dados
+                </strong>
 
                 <ul>
-
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
-
                 </ul>
 
             </div>
@@ -123,7 +159,6 @@
 </main>
 
 
-{{-- Modal de exclusão --}}
 <div
     class="modal-overlay"
     id="deleteModal"
@@ -136,11 +171,13 @@
             🗑️
         </div>
 
-        <h2>Excluir livro?</h2>
+        <h2>
+            Excluir livro?
+        </h2>
 
         <p>
             Essa ação não pode ser desfeita.
-            O livro será removido permanentemente da sua biblioteca.
+            O livro será removido permanentemente.
         </p>
 
         <div class="modal-actions">

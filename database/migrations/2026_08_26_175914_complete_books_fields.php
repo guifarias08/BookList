@@ -57,7 +57,6 @@ return new class extends Migration
             'description',
             'publication_year',
             'isbn',
-            'cover',
             'status',
         ] as $column) {
 
