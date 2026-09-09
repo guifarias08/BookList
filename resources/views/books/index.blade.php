@@ -1,53 +1,69 @@
 @extends('layouts.app')
 
-@section('title', 'BookList | Minha Biblioteca')
+@section('title', 'Acervo | BookList')
 
 @section('content')
 
 
-<div class="page-header">
+<section class="page-heading">
 
     <div>
 
         <span class="eyebrow">
-            MINHA BIBLIOTECA
+            BIBLIOTECA ESCOLAR
         </span>
 
-        <h1 class="page-title">
-            Coleção de livros
+        <h1>
+            Acervo de livros
         </h1>
 
-        <p class="page-description">
-            Organize suas leituras e acompanhe seu progresso.
+        <p>
+            Consulte, organize e acompanhe os livros cadastrados na biblioteca.
         </p>
 
     </div>
 
+
     <a
         href="{{ route('books.create') }}"
-        class="btn-primary"
+        class="btn btn-primary"
     >
-        ＋ Adicionar livro
+        + Cadastrar livro
     </a>
 
-</div>
+</section>
 
 
-<section class="stats">
+<section class="stats-grid">
 
     <div class="stat-card">
 
-        <div class="stat-icon blue">
-            📚
+        <div class="stat-icon">
+            TL
         </div>
 
         <div>
-            <span class="stat-label">
-                Total de livros
-            </span>
+            <span>Total de livros</span>
 
-            <strong class="stat-value">
-                {{ $totalBooks }}
+            <strong>
+                {{ $totalBooks ?? $books->total() }}
+            </strong>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon want">
+            QL
+        </div>
+
+        <div>
+            <span>Quero ler</span>
+
+            <strong>
+                {{ $wantToReadCount ?? 0 }}
             </strong>
         </div>
 
@@ -57,16 +73,14 @@
     <div class="stat-card">
 
         <div class="stat-icon reading">
-            📖
+            LD
         </div>
 
         <div>
-            <span class="stat-label">
-                Lendo agora
-            </span>
+            <span>Lendo</span>
 
-            <strong class="stat-value">
-                {{ $totalReading }}
+            <strong>
+                {{ $readingCount ?? 0 }}
             </strong>
         </div>
 
@@ -75,36 +89,15 @@
 
     <div class="stat-card">
 
-        <div class="stat-icon green">
-            ✅
+        <div class="stat-icon completed">
+            OK
         </div>
 
         <div>
-            <span class="stat-label">
-                Concluídos
-            </span>
+            <span>Concluídos</span>
 
-            <strong class="stat-value">
-                {{ $totalRead }}
-            </strong>
-        </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-        <div class="stat-icon purple">
-            ⭐
-        </div>
-
-        <div>
-            <span class="stat-label">
-                Avaliação média
-            </span>
-
-            <strong class="stat-value">
-                {{ number_format($averageRating ?? 0, 1, ',', '.') }}
+            <strong>
+                {{ $readCount ?? 0 }}
             </strong>
         </div>
 
@@ -113,572 +106,448 @@
 </section>
 
 
-<section class="reading-summary">
+<section class="panel filter-panel">
 
-    <a
-        href="{{ route('books.index', ['status' => 'want_to_read']) }}"
-        class="summary-item"
-    >
-        📕
-        <strong>{{ $totalWantToRead }}</strong>
-        <span>Quero ler</span>
-    </a>
+    <div class="panel-header-simple">
 
+        <div>
 
-    <a
-        href="{{ route('books.index', ['status' => 'paused']) }}"
-        class="summary-item"
-    >
-        ⏸️
-        <strong>{{ $totalPaused }}</strong>
-        <span>Pausados</span>
-    </a>
+            <h2>Filtros do acervo</h2>
 
+            <p>
+                Encontre rapidamente um livro cadastrado.
+            </p>
 
-    <a
-        href="{{ route('books.index', ['status' => 'abandoned']) }}"
-        class="summary-item"
-    >
-        ❌
-        <strong>{{ $totalAbandoned }}</strong>
-        <span>Abandonados</span>
-    </a>
+        </div>
 
+    </div>
 
-    <a
-        href="{{ route('books.index', ['favorites' => 1]) }}"
-        class="summary-item"
-    >
-        ❤️
-        <strong>{{ $totalFavorites }}</strong>
-        <span>Favoritos</span>
-    </a>
-
-</section>
-
-
-<section class="filters">
 
     <form
         action="{{ route('books.index') }}"
         method="GET"
-        class="filter-form"
+        class="filter-grid"
     >
 
-        <div class="search-wrapper">
+        <div class="field search-field">
 
-            <span class="search-icon">
-                🔍
-            </span>
+            <label for="search">
+                Buscar livro
+            </label>
 
             <input
-                type="search"
+                type="text"
+                id="search"
                 name="search"
-                class="search-input"
                 value="{{ request('search') }}"
-                placeholder="Buscar por título ou autor..."
+                placeholder="Título, autor ou ISBN..."
             >
 
         </div>
 
 
-        <select
-            name="genre"
-            class="select"
-        >
+        <div class="field">
 
-            <option value="">
-                Todos os gêneros
-            </option>
+            <label for="genre">
+                Gênero
+            </label>
 
-            @foreach($genres as $genre)
+            <select
+                name="genre"
+                id="genre"
+            >
 
-                <option
-                    value="{{ $genre }}"
-                    @selected(request('genre') === $genre)
-                >
-                    {{ $genre }}
+                <option value="">
+                    Todos
                 </option>
 
-            @endforeach
+                @foreach($genres ?? [] as $genre)
 
-        </select>
+                    <option
+                        value="{{ $genre }}"
+                        @selected(request('genre') === $genre)
+                    >
+                        {{ $genre }}
+                    </option>
+
+                @endforeach
+
+            </select>
+
+        </div>
 
 
-        <select
-            name="status"
-            class="select"
-        >
+        <div class="field">
 
-            <option value="">
-                Todos os status
-            </option>
+            <label for="status">
+                Status
+            </label>
 
-            <option
-                value="want_to_read"
-                @selected(request('status') === 'want_to_read')
+            <select
+                name="status"
+                id="status"
             >
-                📕 Quero ler
-            </option>
 
-            <option
-                value="reading"
-                @selected(request('status') === 'reading')
+                <option value="">
+                    Todos
+                </option>
+
+                <option
+                    value="want_to_read"
+                    @selected(request('status') === 'want_to_read')
+                >
+                    Quero ler
+                </option>
+
+                <option
+                    value="reading"
+                    @selected(request('status') === 'reading')
+                >
+                    Lendo
+                </option>
+
+                <option
+                    value="read"
+                    @selected(request('status') === 'read')
+                >
+                    Concluído
+                </option>
+
+                <option
+                    value="paused"
+                    @selected(request('status') === 'paused')
+                >
+                    Pausado
+                </option>
+
+                <option
+                    value="abandoned"
+                    @selected(request('status') === 'abandoned')
+                >
+                    Abandonado
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-actions">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
             >
-                📖 Lendo
-            </option>
+                Filtrar
+            </button>
 
-            <option
-                value="read"
-                @selected(request('status') === 'read')
+            <a
+                href="{{ route('books.index') }}"
+                class="btn btn-secondary"
             >
-                ✅ Lido
-            </option>
+                Limpar
+            </a>
 
-            <option
-                value="paused"
-                @selected(request('status') === 'paused')
-            >
-                ⏸️ Pausado
-            </option>
-
-            <option
-                value="abandoned"
-                @selected(request('status') === 'abandoned')
-            >
-                ❌ Abandonei
-            </option>
-
-        </select>
-
-
-        <select
-            name="sort"
-            class="select"
-        >
-
-            <option value="">
-                Ordenar por
-            </option>
-
-            <option
-                value="recent"
-                @selected(request('sort') === 'recent')
-            >
-                Mais recentes
-            </option>
-
-            <option
-                value="rating"
-                @selected(request('sort') === 'rating')
-            >
-                Melhor avaliação
-            </option>
-
-            <option
-                value="newest"
-                @selected(request('sort') === 'newest')
-            >
-                Ano mais recente
-            </option>
-
-            <option
-                value="oldest"
-                @selected(request('sort') === 'oldest')
-            >
-                Ano mais antigo
-            </option>
-
-            <option
-                value="title_desc"
-                @selected(request('sort') === 'title_desc')
-            >
-                Título Z → A
-            </option>
-
-        </select>
-
-
-        @if(request('favorites'))
-            <input
-                type="hidden"
-                name="favorites"
-                value="1"
-            >
-        @endif
-
-
-        <button
-            type="submit"
-            class="btn-search"
-        >
-            Buscar
-        </button>
-
-
-        <a
-            href="{{ route('books.index') }}"
-            class="btn-clear"
-        >
-            Limpar
-        </a>
+        </div>
 
     </form>
 
 </section>
 
 
-<div class="library-toolbar">
+<section class="panel library-panel">
 
-    <div>
+    <div class="library-header">
 
-        <h2>
-            Livros
-        </h2>
+        <div>
 
-        <span>
-            {{ $books->total() }}
-            {{ $books->total() === 1 ? 'resultado' : 'resultados' }}
-        </span>
+            <h2>
+                Livros cadastrados
+            </h2>
 
-    </div>
+            <p>
+                {{ $books->total() }}
+                livro(s) encontrado(s)
+            </p>
 
-
-    <div class="view-buttons">
-
-        <button
-            type="button"
-            id="gridViewButton"
-            class="view-button"
-            title="Visualização em grade"
-        >
-            ▦
-        </button>
-
-        <button
-            type="button"
-            id="listViewButton"
-            class="view-button"
-            title="Visualização em lista"
-        >
-            ☰
-        </button>
+        </div>
 
     </div>
 
-</div>
+
+    <div class="table-wrapper">
+
+        <table class="books-table">
+
+            <thead>
+
+                <tr>
+                    <th>Livro</th>
+                    <th>Autor</th>
+                    <th>Gênero</th>
+                    <th>Ano</th>
+                    <th>Progresso</th>
+                    <th>Status</th>
+                    <th>Nota</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
 
 
-@if($books->count())
+            <tbody>
+
+                @forelse($books as $book)
+
+                    @php
+
+                        $progress = 0;
+
+                        if (
+                            ($book->total_pages ?? 0) > 0
+                            && ($book->current_page ?? 0) >= 0
+                        ) {
+                            $progress = min(
+                                100,
+                                round(
+                                    (($book->current_page ?? 0)
+                                    / $book->total_pages)
+                                    * 100
+                                )
+                            );
+                        }
+
+                    @endphp
 
 
-    <section
-        id="booksContainer"
-        class="books-grid"
-    >
+                    <tr>
 
-        @foreach($books as $book)
+                        <td>
 
-            <article class="book-card">
+                            <div class="book-cell">
 
+                                <div class="book-cover-small">
 
-                <div class="book-card-cover">
+                                    @if($book->cover)
 
-                    @if($book->cover)
+                                        <img
+                                            src="{{ asset('storage/' . $book->cover) }}"
+                                            alt="{{ $book->title }}"
+                                        >
 
-                        <img
-                            src="{{ asset('storage/' . $book->cover) }}"
-                            alt="Capa de {{ $book->title }}"
-                        >
+                                    @else
 
-                    @else
+                                        <span>
+                                            {{ strtoupper(substr($book->title, 0, 1)) }}
+                                        </span>
 
-                        <div class="book-cover-placeholder">
-                            📚
-                        </div>
+                                    @endif
 
-                    @endif
+                                </div>
 
 
-                    <form
-                        action="{{ route('books.favorite', $book) }}"
-                        method="POST"
-                        class="favorite-form"
-                    >
+                                <div>
 
-                        @csrf
-                        @method('PATCH')
+                                    <strong>
+                                        {{ $book->title }}
+                                    </strong>
 
-                        <button
-                            type="submit"
-                            class="favorite-button"
-                            title="Favoritar"
-                        >
-                            {{ $book->favorite ? '❤️' : '🤍' }}
-                        </button>
+                                    <small>
+                                        {{ $book->isbn ?: 'Sem ISBN' }}
+                                    </small>
 
-                    </form>
+                                </div>
 
-                </div>
+                            </div>
+
+                        </td>
 
 
-                <div class="book-card-content">
+                        <td>
+                            {{ $book->author }}
+                        </td>
 
 
-                    <div class="book-card-top">
-
-                        @if($book->genre)
-
-                            <span class="badge">
-                                {{ $book->genre }}
-                            </span>
-
-                        @endif
+                        <td>
+                            {{ $book->genre ?: '—' }}
+                        </td>
 
 
-                        <span class="status-badge {{ $book->status_class }}">
-
-                            {{ $book->status_icon }}
-
-                            {{ $book->status_label }}
-
-                        </span>
-
-                    </div>
+                        <td>
+                            {{ $book->publication_year ?: '—' }}
+                        </td>
 
 
-                    <h3>
-                        {{ $book->title }}
-                    </h3>
+                        <td>
 
+                            @if(($book->total_pages ?? 0) > 0)
 
-                    <p class="book-author">
-                        {{ $book->author }}
-                    </p>
+                                <div class="progress-cell">
 
+                                    <div class="progress-header">
 
-                    @if($book->publication_year)
+                                        <span>
+                                            {{ $book->current_page ?? 0 }}
+                                            /
+                                            {{ $book->total_pages }}
+                                        </span>
 
-                        <p class="book-meta">
-                            📅 {{ $book->publication_year }}
-                        </p>
+                                        <span>
+                                            {{ $progress }}%
+                                        </span>
 
-                    @endif
+                                    </div>
 
+                                    <div class="progress-track">
 
-                    <form
-                        action="{{ route('books.rating', $book) }}"
-                        method="POST"
-                        class="rating-form"
-                    >
+                                        <span
+                                            style="width: {{ $progress }}%"
+                                        ></span>
 
-                        @csrf
-                        @method('PATCH')
+                                    </div>
 
+                                </div>
 
-                        <div class="table-rating">
+                            @else
 
-                            @for($i = 1; $i <= 5; $i++)
-
-                                <button
-                                    type="submit"
-                                    name="rating"
-                                    value="{{ $i }}"
-                                    class="star-button {{ ($book->rating ?? 0) >= $i ? 'star-filled' : 'star-empty' }}"
-                                >
-                                    ★
-                                </button>
-
-                            @endfor
-
-
-                            @if($book->rating)
-
-                                <span class="rating-number">
-                                    {{ $book->rating }}/5
+                                <span class="muted">
+                                    —
                                 </span>
 
                             @endif
 
-                        </div>
-
-                    </form>
+                        </td>
 
 
-                    @if($book->pages)
+                        <td>
 
-                        <div class="book-progress">
+                            <span class="status-badge status-{{ $book->status }}">
 
-                            <div class="progress-info">
+                                @switch($book->status)
 
-                                <span>
-                                    Progresso
+                                    @case('want_to_read')
+                                        Quero ler
+                                        @break
+
+                                    @case('reading')
+                                        Lendo
+                                        @break
+
+                                    @case('read')
+                                        Concluído
+                                        @break
+
+                                    @case('paused')
+                                        Pausado
+                                        @break
+
+                                    @case('abandoned')
+                                        Abandonado
+                                        @break
+
+                                    @default
+                                        {{ $book->status }}
+
+                                @endswitch
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            @if($book->rating)
+
+                                <span class="rating-badge">
+                                    {{ $book->rating }}/5
                                 </span>
 
-                                <strong>
-                                    {{ $book->progress }}%
-                                </strong>
+                            @else
+
+                                <span class="muted">
+                                    —
+                                </span>
+
+                            @endif
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="table-actions">
+
+                                <a
+                                    href="{{ route('books.show', $book) }}"
+                                    class="action-button"
+                                >
+                                    Ver
+                                </a>
+
+                                <a
+                                    href="{{ route('books.edit', $book) }}"
+                                    class="action-button"
+                                >
+                                    Editar
+                                </a>
 
                             </div>
 
+                        </td>
 
-                            <div class="progress-track">
+                    </tr>
 
-                                <div
-                                    class="progress-value"
-                                    style="width: {{ $book->progress }}%"
-                                ></div>
+                @empty
+
+                    <tr>
+
+                        <td colspan="8">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    B
+                                </div>
+
+                                <h3>
+                                    Nenhum livro encontrado
+                                </h3>
+
+                                <p>
+                                    Cadastre um novo livro ou altere os filtros.
+                                </p>
+
+                                <a
+                                    href="{{ route('books.create') }}"
+                                    class="btn btn-primary"
+                                >
+                                    + Cadastrar livro
+                                </a>
 
                             </div>
 
+                        </td>
 
-                            <small>
+                    </tr>
 
-                                {{ $book->current_page ?? 0 }}
+                @endforelse
 
-                                /
+            </tbody>
 
-                                {{ $book->pages }}
+        </table>
 
-                                páginas
-
-                            </small>
-
-                        </div>
-
-                    @endif
-
-
-                    <div class="book-card-actions">
-
-                        <a
-                            href="{{ route('books.show', $book) }}"
-                            class="action-button view"
-                        >
-                            👁 Ver
-                        </a>
-
-
-                        <a
-                            href="{{ route('books.edit', $book) }}"
-                            class="action-button edit"
-                        >
-                            ✏️ Editar
-                        </a>
-
-
-                        <form
-                            action="{{ route('books.destroy', $book) }}"
-                            method="POST"
-                            class="delete-form"
-                        >
-
-                            @csrf
-                            @method('DELETE')
-
-                            <button
-                                type="submit"
-                                class="action-button delete"
-                            >
-                                🗑 Excluir
-                            </button>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        @endforeach
-
-    </section>
+    </div>
 
 
     @if($books->hasPages())
 
-        <div class="pagination">
-
-            @if($books->onFirstPage())
-
-                <span class="page-disabled">
-                    ← Anterior
-                </span>
-
-            @else
-
-                <a
-                    href="{{ $books->previousPageUrl() }}"
-                    class="page-link"
-                >
-                    ← Anterior
-                </a>
-
-            @endif
-
-
-            <span class="page-current">
-
-                Página
-                {{ $books->currentPage() }}
-
-                de
-
-                {{ $books->lastPage() }}
-
-            </span>
-
-
-            @if($books->hasMorePages())
-
-                <a
-                    href="{{ $books->nextPageUrl() }}"
-                    class="page-link"
-                >
-                    Próxima →
-                </a>
-
-            @else
-
-                <span class="page-disabled">
-                    Próxima →
-                </span>
-
-            @endif
-
+        <div class="pagination-area">
+            {{ $books->links() }}
         </div>
 
     @endif
 
-
-@else
-
-
-    <section class="empty">
-
-        <div class="empty-icon">
-            📚
-        </div>
-
-        <h3>
-            Nenhum livro encontrado
-        </h3>
-
-        <p>
-            Tente alterar os filtros ou adicione um novo livro.
-        </p>
-
-        <a
-            href="{{ route('books.create') }}"
-            class="btn-primary"
-        >
-            ＋ Adicionar livro
-        </a>
-
-    </section>
-
-@endif
-
+</section>
 
 @endsection

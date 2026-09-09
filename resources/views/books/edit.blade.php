@@ -4,107 +4,98 @@
 
 @section('content')
 
-<div class="page-header">
+
+<section class="page-heading">
 
     <div>
 
         <span class="eyebrow">
-            EDITAR LIVRO
+            MANUTENÇÃO DO ACERVO
         </span>
 
-        <h1 class="page-title">
+        <h1>
             Editar livro
         </h1>
 
-        <p class="page-description">
-            Atualize as informações da sua leitura.
+        <p>
+            Atualize os dados e o progresso de leitura.
         </p>
 
     </div>
 
+
     <a
-        href="{{ route('books.index') }}"
-        class="btn-clear"
+        href="{{ route('books.show', $book) }}"
+        class="btn btn-secondary"
     >
         ← Voltar
     </a>
 
-</div>
+</section>
 
 
-<section class="form-card">
+<section class="form-layout">
 
-    <div class="form-heading">
 
-        <div class="form-heading-icon">
-            ✏️
+    <div class="panel form-panel">
+
+        <div class="form-panel-header">
+
+            <div class="form-panel-icon">
+                E
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ $book->title }}
+                </h2>
+
+                <p>
+                    Atualize as informações cadastradas.
+                </p>
+
+            </div>
+
         </div>
 
-        <div>
 
-            <h2>
-                {{ $book->title }}
-            </h2>
+        <form
+            action="{{ route('books.update', $book) }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
 
-            <p>
-                Atualize os dados abaixo.
-            </p>
-
-        </div>
-
-    </div>
+            @csrf
+            @method('PUT')
 
 
-    <form
-        action="{{ route('books.update', $book) }}"
-        method="POST"
-        enctype="multipart/form-data"
-    >
+            <div class="cover-area">
 
-        @csrf
-        @method('PUT')
-
-
-        <div class="book-form-layout">
-
-
-            <div class="cover-upload-area">
-
-                <div class="cover-preview">
+                <div
+                    class="cover-preview"
+                    id="coverPreview"
+                >
 
                     @if($book->cover)
 
                         <img
-                            id="coverPreview"
-                            class="cover-preview-image"
                             src="{{ asset('storage/' . $book->cover) }}"
                             alt="{{ $book->title }}"
                         >
 
-                        <div
-                            id="coverPlaceholder"
-                            class="cover-placeholder hidden"
-                        >
-                            📚
-                        </div>
-
                     @else
 
-                        <img
-                            id="coverPreview"
-                            class="cover-preview-image hidden"
-                            alt="Prévia"
-                        >
+                        <div class="cover-placeholder">
 
-                        <div
-                            id="coverPlaceholder"
-                            class="cover-placeholder"
-                        >
-                            📚
+                            <strong>
+                                {{ strtoupper(substr($book->title, 0, 1)) }}
+                            </strong>
 
                             <span>
                                 Sem capa
                             </span>
+
                         </div>
 
                     @endif
@@ -112,36 +103,41 @@
                 </div>
 
 
-                <label
-                    for="cover"
-                    class="cover-upload-button"
-                >
-                    📷 Alterar capa
-                </label>
+                <div class="cover-upload">
 
-                <input
-                    id="cover"
-                    name="cover"
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    class="hidden"
-                >
+                    <label for="cover">
+                        Alterar capa
+                    </label>
+
+                    <input
+                        type="file"
+                        id="cover"
+                        name="cover"
+                        accept="image/*"
+                    >
+
+                    <small>
+                        Deixe vazio para manter a capa atual.
+                    </small>
+
+                </div>
 
             </div>
 
 
             <div class="form-grid">
 
-                <div class="form-group full">
+
+                <div class="field full">
 
                     <label for="title">
                         Título *
                     </label>
 
                     <input
+                        type="text"
                         id="title"
                         name="title"
-                        type="text"
                         value="{{ old('title', $book->title) }}"
                         required
                     >
@@ -149,16 +145,16 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="author">
                         Autor *
                     </label>
 
                     <input
+                        type="text"
                         id="author"
                         name="author"
-                        type="text"
                         value="{{ old('author', $book->author) }}"
                         required
                     >
@@ -166,101 +162,98 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="genre">
                         Gênero
                     </label>
 
                     <input
+                        type="text"
                         id="genre"
                         name="genre"
-                        type="text"
                         value="{{ old('genre', $book->genre) }}"
                     >
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="publication_year">
                         Ano
                     </label>
 
                     <input
+                        type="number"
                         id="publication_year"
                         name="publication_year"
-                        type="number"
                         value="{{ old('publication_year', $book->publication_year) }}"
-                        min="1000"
-                        max="{{ date('Y') }}"
                     >
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="isbn">
                         ISBN
                     </label>
 
                     <input
+                        type="text"
                         id="isbn"
                         name="isbn"
-                        type="text"
                         value="{{ old('isbn', $book->isbn) }}"
                     >
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="status">
                         Status
                     </label>
 
                     <select
-                        id="status"
                         name="status"
-                        required
+                        id="status"
                     >
 
                         <option
                             value="want_to_read"
                             @selected(old('status', $book->status) === 'want_to_read')
                         >
-                            📕 Quero ler
+                            Quero ler
                         </option>
 
                         <option
                             value="reading"
                             @selected(old('status', $book->status) === 'reading')
                         >
-                            📖 Lendo
+                            Lendo
                         </option>
 
                         <option
                             value="read"
                             @selected(old('status', $book->status) === 'read')
                         >
-                            ✅ Lido
+                            Concluído
                         </option>
 
                         <option
                             value="paused"
                             @selected(old('status', $book->status) === 'paused')
                         >
-                            ⏸️ Pausado
+                            Pausado
                         </option>
 
                         <option
                             value="abandoned"
                             @selected(old('status', $book->status) === 'abandoned')
                         >
-                            ❌ Abandonei
+                            Abandonado
                         </option>
 
                     </select>
@@ -268,41 +261,41 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
-                    <label for="pages">
+                    <label for="total_pages">
                         Total de páginas
                     </label>
 
                     <input
-                        id="pages"
-                        name="pages"
                         type="number"
-                        min="1"
-                        value="{{ old('pages', $book->pages) }}"
+                        id="total_pages"
+                        name="total_pages"
+                        value="{{ old('total_pages', $book->total_pages) }}"
+                        min="0"
                     >
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="current_page">
                         Página atual
                     </label>
 
                     <input
+                        type="number"
                         id="current_page"
                         name="current_page"
-                        type="number"
-                        min="0"
                         value="{{ old('current_page', $book->current_page) }}"
+                        min="0"
                     >
 
                 </div>
 
 
-                <div class="form-group full">
+                <div class="field full">
 
                     <label for="description">
                         Sinopse / Anotações
@@ -318,28 +311,59 @@
 
             </div>
 
-        </div>
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ route('books.show', $book) }}"
+                    class="btn btn-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 
-        <div class="form-actions">
+    <aside class="panel danger-panel">
 
-            <a
-                href="{{ route('books.index') }}"
-                class="btn-cancel"
-            >
-                Cancelar
-            </a>
+        <h3>Zona administrativa</h3>
+
+        <p>
+            A exclusão remove permanentemente o livro do acervo.
+        </p>
+
+
+        <form
+            action="{{ route('books.destroy', $book) }}"
+            method="POST"
+            onsubmit="return confirm('Deseja realmente excluir este livro?')"
+        >
+
+            @csrf
+            @method('DELETE')
 
             <button
                 type="submit"
-                class="btn-primary"
+                class="btn btn-danger"
             >
-                ✓ Salvar alterações
+                Excluir livro
             </button>
 
-        </div>
+        </form>
 
-    </form>
+    </aside>
+
 
 </section>
 

@@ -1,211 +1,199 @@
 @extends('layouts.app')
 
-@section('title', 'Adicionar livro | BookList')
+@section('title', 'Cadastrar livro | BookList')
 
 @section('content')
 
-<div class="page-header">
+
+<section class="page-heading">
 
     <div>
+
         <span class="eyebrow">
-            NOVO LIVRO
+            CADASTRO DO ACERVO
         </span>
 
-        <h1 class="page-title">
-            Adicionar livro
+        <h1>
+            Novo livro
         </h1>
 
-        <p class="page-description">
-            Cadastre um novo livro na sua biblioteca.
+        <p>
+            Adicione um novo livro à biblioteca escolar.
         </p>
+
     </div>
+
 
     <a
         href="{{ route('books.index') }}"
-        class="btn-clear"
+        class="btn btn-secondary"
     >
         ← Voltar
     </a>
 
-</div>
+</section>
 
 
-<section class="form-card">
+<section class="form-layout">
 
-    <div class="form-heading">
 
-        <div class="form-heading-icon">
-            📚
+    <div class="panel form-panel">
+
+        <div class="form-panel-header">
+
+            <div class="form-panel-icon">
+                B
+            </div>
+
+            <div>
+
+                <h2>
+                    Informações do livro
+                </h2>
+
+                <p>
+                    Preencha os dados bibliográficos e informações de leitura.
+                </p>
+
+            </div>
+
         </div>
 
-        <div>
-            <h2>Informações do livro</h2>
 
-            <p>
-                Adicione os dados, capa e informações da leitura.
-            </p>
-        </div>
+        <form
+            action="{{ route('books.store') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
 
-    </div>
-
-
-    <form
-        action="{{ route('books.store') }}"
-        method="POST"
-        enctype="multipart/form-data"
-    >
-
-        @csrf
+            @csrf
 
 
-        <div class="book-form-layout">
+            <div class="cover-area">
 
+                <div
+                    class="cover-preview"
+                    id="coverPreview"
+                >
 
-            <div class="cover-upload-area">
+                    <div class="cover-placeholder">
 
-                <div class="cover-preview">
-
-                    <img
-                        id="coverPreview"
-                        class="cover-preview-image hidden"
-                        alt="Prévia da capa"
-                    >
-
-                    <div
-                        id="coverPlaceholder"
-                        class="cover-placeholder"
-                    >
-                        📚
+                        <strong>B</strong>
 
                         <span>
-                            Capa do livro
+                            Prévia da capa
                         </span>
+
                     </div>
 
                 </div>
 
 
-                <label
-                    for="cover"
-                    class="cover-upload-button"
-                >
-                    📷 Escolher capa
-                </label>
+                <div class="cover-upload">
 
-                <input
-                    id="cover"
-                    name="cover"
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    class="hidden"
-                >
+                    <label for="cover">
+                        Capa do livro
+                    </label>
 
-                @error('cover')
-                    <small class="form-error">
-                        {{ $message }}
+                    <input
+                        type="file"
+                        id="cover"
+                        name="cover"
+                        accept="image/*"
+                    >
+
+                    <small>
+                        JPG, PNG ou WEBP. Máximo recomendado: 2 MB.
                     </small>
-                @enderror
+
+                </div>
 
             </div>
 
 
             <div class="form-grid">
 
-                <div class="form-group full">
+
+                <div class="field full">
 
                     <label for="title">
-                        Título <span>*</span>
+                        Título *
                     </label>
 
                     <input
+                        type="text"
                         id="title"
                         name="title"
-                        type="text"
                         value="{{ old('title') }}"
-                        placeholder="Ex.: Harry Potter"
+                        placeholder="Ex.: Dom Casmurro"
                         required
-                        autofocus
                     >
-
-                    @error('title')
-                        <small>{{ $message }}</small>
-                    @enderror
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="author">
-                        Autor <span>*</span>
+                        Autor *
                     </label>
 
                     <input
+                        type="text"
                         id="author"
                         name="author"
-                        type="text"
                         value="{{ old('author') }}"
-                        placeholder="Ex.: J. K. Rowling"
+                        placeholder="Ex.: Machado de Assis"
                         required
                     >
-
-                    @error('author')
-                        <small>{{ $message }}</small>
-                    @enderror
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="genre">
                         Gênero
                     </label>
 
                     <input
+                        type="text"
                         id="genre"
                         name="genre"
-                        type="text"
                         value="{{ old('genre') }}"
-                        placeholder="Ex.: Fantasia"
+                        placeholder="Ex.: Romance"
                     >
-
-                    @error('genre')
-                        <small>{{ $message }}</small>
-                    @enderror
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="publication_year">
-                        Ano
+                        Ano de publicação
                     </label>
 
                     <input
+                        type="number"
                         id="publication_year"
                         name="publication_year"
-                        type="number"
                         value="{{ old('publication_year') }}"
-                        min="1000"
-                        max="{{ date('Y') }}"
-                        placeholder="Ex.: 1997"
+                        placeholder="Ex.: 1899"
                     >
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="isbn">
                         ISBN
                     </label>
 
                     <input
+                        type="text"
                         id="isbn"
                         name="isbn"
-                        type="text"
                         value="{{ old('isbn') }}"
                         placeholder="Ex.: 9788532530783"
                     >
@@ -213,15 +201,15 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="status">
-                        Status <span>*</span>
+                        Status de leitura *
                     </label>
 
                     <select
-                        id="status"
                         name="status"
+                        id="status"
                         required
                     >
 
@@ -229,35 +217,35 @@
                             value="want_to_read"
                             @selected(old('status', 'want_to_read') === 'want_to_read')
                         >
-                            📕 Quero ler
+                            Quero ler
                         </option>
 
                         <option
                             value="reading"
                             @selected(old('status') === 'reading')
                         >
-                            📖 Lendo
+                            Lendo
                         </option>
 
                         <option
                             value="read"
                             @selected(old('status') === 'read')
                         >
-                            ✅ Lido
+                            Concluído
                         </option>
 
                         <option
                             value="paused"
                             @selected(old('status') === 'paused')
                         >
-                            ⏸️ Pausado
+                            Pausado
                         </option>
 
                         <option
                             value="abandoned"
                             @selected(old('status') === 'abandoned')
                         >
-                            ❌ Abandonei
+                            Abandonado
                         </option>
 
                     </select>
@@ -265,46 +253,43 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
-                    <label for="pages">
+                    <label for="total_pages">
                         Total de páginas
                     </label>
 
                     <input
-                        id="pages"
-                        name="pages"
                         type="number"
-                        min="1"
-                        value="{{ old('pages') }}"
+                        id="total_pages"
+                        name="total_pages"
+                        value="{{ old('total_pages') }}"
                         placeholder="Ex.: 320"
+                        min="0"
                     >
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="field">
 
                     <label for="current_page">
                         Página atual
                     </label>
 
                     <input
+                        type="number"
                         id="current_page"
                         name="current_page"
-                        type="number"
-                        min="0"
                         value="{{ old('current_page', 0) }}"
+                        placeholder="0"
+                        min="0"
                     >
-
-                    @error('current_page')
-                        <small>{{ $message }}</small>
-                    @enderror
 
                 </div>
 
 
-                <div class="form-group full">
+                <div class="field full">
 
                     <label for="description">
                         Sinopse / Anotações
@@ -314,35 +299,85 @@
                         id="description"
                         name="description"
                         rows="6"
-                        placeholder="Escreva uma descrição, sinopse ou suas anotações..."
+                        placeholder="Escreva uma sinopse, descrição ou observação..."
                     >{{ old('description') }}</textarea>
 
                 </div>
 
             </div>
 
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ route('books.index') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Salvar livro
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <aside class="panel tips-panel">
+
+        <h3>
+            Boas práticas
+        </h3>
+
+        <p class="tips-intro">
+            Informações completas deixam o acervo mais organizado.
+        </p>
+
+
+        <div class="tip">
+
+            <span>01</span>
+
+            <div>
+                <strong>Título e autor</strong>
+                <p>Use os nomes completos para facilitar pesquisas.</p>
+            </div>
+
         </div>
 
 
-        <div class="form-actions">
+        <div class="tip">
 
-            <a
-                href="{{ route('books.index') }}"
-                class="btn-cancel"
-            >
-                Cancelar
-            </a>
+            <span>02</span>
 
-            <button
-                type="submit"
-                class="btn-primary"
-            >
-                ✓ Salvar livro
-            </button>
+            <div>
+                <strong>ISBN</strong>
+                <p>Ajuda a identificar corretamente cada edição.</p>
+            </div>
 
         </div>
 
-    </form>
+
+        <div class="tip">
+
+            <span>03</span>
+
+            <div>
+                <strong>Progresso</strong>
+                <p>Informe as páginas para acompanhar sua leitura.</p>
+            </div>
+
+        </div>
+
+    </aside>
+
 
 </section>
 

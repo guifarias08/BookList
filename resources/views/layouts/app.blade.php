@@ -11,116 +11,108 @@
 
     <title>@yield('title', 'BookList')</title>
 
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
+    <script>
+        (function () {
+            const theme = localStorage.getItem('booklist-theme');
 
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/app.css') }}"
+        href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}"
     >
 </head>
 
 <body>
 
-<header class="navbar">
+<header class="topbar">
 
-    <div class="navbar-container">
+    <div class="topbar-inner">
 
         <a
             href="{{ route('books.index') }}"
-            class="logo"
+            class="brand"
         >
-            <span class="logo-icon">
-                📚
-            </span>
 
-            <span>
-                BookList
-            </span>
+            <div class="brand-logo">
+                B
+            </div>
+
+            <div class="brand-text">
+                <strong>BookList</strong>
+                <span>Biblioteca Escolar</span>
+            </div>
+
         </a>
 
-        <button
-            class="mobile-menu-button"
-            id="mobileMenuButton"
-            type="button"
-            aria-label="Abrir menu"
-        >
-            ☰
-        </button>
 
         <nav
-            class="nav-links"
-            id="navLinks"
+            class="main-nav"
+            id="mainNav"
         >
 
             <a
                 href="{{ route('books.index') }}"
-                class="nav-link {{ request()->routeIs('books.index') && !request('status') && !request('favorites') ? 'active' : '' }}"
+                class="{{ request()->routeIs('books.index') ? 'active' : '' }}"
             >
-                Início
+                Acervo
             </a>
-            
+
             <a
-                href="{{ route('books.index', ['favorites' => 1]) }}"
-                class="nav-link {{ request('favorites') ? 'active' : '' }}"
+                href="{{ route('books.create') }}"
+                class="{{ request()->routeIs('books.create') ? 'active' : '' }}"
             >
-                ❤️ Favoritos
+                Novo livro
             </a>
+
+        </nav>
+
+
+        <div class="topbar-actions">
 
             <button
                 type="button"
                 id="themeToggle"
                 class="theme-toggle"
-                title="Alterar tema"
+                aria-label="Alternar tema"
             >
                 🌙
             </button>
 
-        </nav>
+        </div>
+
+
+        <button
+            type="button"
+            id="menuButton"
+            class="menu-button"
+        >
+            ☰
+        </button>
 
     </div>
 
 </header>
 
 
-<main class="container">
+<main class="app-shell">
 
     @if(session('success'))
 
-        <div
-            class="toast toast-success"
-            id="successToast"
-        >
+        <div class="alert alert-success">
 
-            <span class="toast-icon">
+            <div class="alert-icon">
                 ✓
-            </span>
-
-            <div>
-                <strong>Sucesso!</strong>
-                <p>{{ session('success') }}</p>
             </div>
 
-            <button
-                type="button"
-                class="toast-close"
-                onclick="closeToast()"
-            >
-                ×
-            </button>
+            <div>
+                <strong>Sucesso</strong>
+                <p>{{ session('success') }}</p>
+            </div>
 
         </div>
 
@@ -138,7 +130,7 @@
             <div>
 
                 <strong>
-                    Verifique os dados
+                    Verifique as informações
                 </strong>
 
                 <ul>
@@ -159,53 +151,9 @@
 </main>
 
 
-<div
-    class="modal-overlay"
-    id="deleteModal"
-    aria-hidden="true"
->
-
-    <div class="modal">
-
-        <div class="modal-icon">
-            🗑️
-        </div>
-
-        <h2>
-            Excluir livro?
-        </h2>
-
-        <p>
-            Essa ação não pode ser desfeita.
-            O livro será removido permanentemente.
-        </p>
-
-        <div class="modal-actions">
-
-            <button
-                type="button"
-                class="btn-cancel"
-                id="cancelDelete"
-            >
-                Cancelar
-            </button>
-
-            <button
-                type="button"
-                class="btn-delete-confirm"
-                id="confirmDelete"
-            >
-                Sim, excluir
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script src="{{ asset('js/app.js') }}"></script>
+<script
+    src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"
+></script>
 
 </body>
 </html>
