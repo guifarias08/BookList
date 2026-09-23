@@ -16,14 +16,16 @@ class Book extends Model
         'cover',
         'status',
         'rating',
-        'total_pages',
+        'pages',
         'current_page',
+        'favorite',
     ];
 
     protected $casts = [
         'publication_year' => 'integer',
         'rating' => 'integer',
-        'total_pages' => 'integer',
+        'pages' => 'integer',
         'current_page' => 'integer',
+        'favorite' => 'boolean',
     ];
 }
