@@ -10,7 +10,7 @@
         <p>Consulte, organize e acompanhe os livros cadastrados na biblioteca.</p>
     </div>
 
-    <a href="{{ route('books.create') }}" class="btn btn-primary">Cadastrar livro</a>
+    <a href="{{ route('books.create') }}" class="btn btn-primary" data-loading-link="Abrindo o cadastro...">Cadastrar livro</a>
 </section>
 
 <section class="stats-grid" aria-label="Resumo do acervo">
@@ -92,7 +92,7 @@
 
         <div class="filter-actions">
             <button type="submit" class="btn btn-primary">Filtrar</button>
-            <a href="{{ route('books.index') }}" class="btn btn-secondary">Limpar</a>
+            <a href="{{ route('books.index') }}" class="btn btn-secondary" data-loading-link="Limpando filtros...">Limpar</a>
         </div>
     </form>
 </section>
@@ -185,8 +185,8 @@
                                         {{ $book->favorite ? '★' : '☆' }}
                                     </button>
                                 </form>
-                                <a href="{{ route('books.show', $book) }}" class="action-button">Ver</a>
-                                <a href="{{ route('books.edit', $book) }}" class="action-button">Editar</a>
+                                <a href="{{ route('books.show', $book) }}" class="action-button" data-loading-link="Abrindo detalhes...">Ver</a>
+                                <a href="{{ route('books.edit', $book) }}" class="action-button" data-loading-link="Abrindo edição...">Editar</a>
                             </div>
                         </td>
                     </tr>
@@ -197,7 +197,7 @@
                                 <div class="empty-icon" aria-hidden="true">B</div>
                                 <h3>Nenhum livro encontrado</h3>
                                 <p>Cadastre um novo livro ou altere os filtros.</p>
-                                <a href="{{ route('books.create') }}" class="btn btn-primary">Cadastrar livro</a>
+                                <a href="{{ route('books.create') }}" class="btn btn-primary" data-loading-link="Abrindo o cadastro...">Cadastrar livro</a>
                             </div>
                         </td>
                     </tr>
@@ -211,13 +211,13 @@
             @if($books->onFirstPage())
                 <span class="pagination-link disabled" aria-disabled="true">Anterior</span>
             @else
-                <a class="pagination-link" href="{{ $books->previousPageUrl() }}" rel="prev">Anterior</a>
+                <a class="pagination-link" href="{{ $books->previousPageUrl() }}" rel="prev" data-loading-link="Carregando página anterior...">Anterior</a>
             @endif
 
             <span class="pagination-info">Página {{ $books->currentPage() }} de {{ $books->lastPage() }}</span>
 
             @if($books->hasMorePages())
-                <a class="pagination-link" href="{{ $books->nextPageUrl() }}" rel="next">Próxima</a>
+                <a class="pagination-link" href="{{ $books->nextPageUrl() }}" rel="next" data-loading-link="Carregando próxima página...">Próxima</a>
             @else
                 <span class="pagination-link disabled" aria-disabled="true">Próxima</span>
             @endif
