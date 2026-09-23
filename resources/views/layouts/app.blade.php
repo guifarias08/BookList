@@ -36,12 +36,15 @@
         <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
             <a href="{{ route('books.index') }}"
                class="{{ request()->routeIs('books.index') ? 'active' : '' }}"
-               @if(request()->routeIs('books.index')) aria-current="page" @endif>
+               @if(request()->routeIs('books.index')) aria-current="page" @endif
+               data-loading-link="Abrindo o acervo...">
                 Acervo
             </a>
+
             <a href="{{ route('books.create') }}"
                class="{{ request()->routeIs('books.create') ? 'active' : '' }}"
-               @if(request()->routeIs('books.create')) aria-current="page" @endif>
+               @if(request()->routeIs('books.create')) aria-current="page" @endif
+               data-loading-link="Abrindo o cadastro...">
                 Novo livro
             </a>
         </nav>
@@ -74,32 +77,34 @@
 </header>
 
 <main class="app-shell">
-    @if(session('success'))
-        <div class="alert alert-success" role="status" aria-live="polite">
-            <div class="alert-icon" aria-hidden="true">✓</div>
-            <div>
-                <strong>Sucesso</strong>
-                <p>{{ session('success') }}</p>
-            </div>
-        </div>
-    @endif
-
-    @if($errors->any())
-        <div class="alert alert-error" role="alert">
-            <div class="alert-icon" aria-hidden="true">!</div>
-            <div>
-                <strong>Verifique as informações</strong>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    @endif
-
     @yield('content')
 </main>
+
+<div id="globalLoader"
+     class="global-loader"
+     aria-hidden="true"
+     role="status"
+     aria-live="polite">
+    <div class="global-loader-card">
+        <span class="loader-ring" aria-hidden="true"></span>
+        <div>
+            <strong id="globalLoaderTitle">Só um instante</strong>
+            <span id="globalLoaderText">Processando...</span>
+        </div>
+    </div>
+</div>
+
+<div id="toastFallbackStack" class="toast-fallback-stack" aria-live="polite"></div>
+
+<script>
+    window.bookListFlash = {
+        success: @json(session('success')),
+        error: @json(session('error')),
+        warning: @json(session('warning')),
+        info: @json(session('info')),
+        errors: @json($errors->all())
+    };
+</script>
 
 @unless(file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json')))
     <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}" defer></script>
