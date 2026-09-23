@@ -109,7 +109,7 @@
     </div>
 
     <div class="form-actions">
-        <a href="{{ $cancelUrl }}" class="btn btn-secondary">Cancelar</a>
+        <a href="{{ $cancelUrl }}" class="btn btn-secondary" data-loading-link="Voltando...">Cancelar</a>
         <button type="submit" class="btn btn-primary">{{ $submitLabel }}</button>
     </div>
 </form>
