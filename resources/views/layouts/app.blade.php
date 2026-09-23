@@ -16,7 +16,11 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
+    @if(file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json')))
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @else
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
+    @endif
 </head>
 <body>
 <header class="topbar">
@@ -97,6 +101,8 @@
     @yield('content')
 </main>
 
-<script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}" defer></script>
+@unless(file_exists(public_path('hot')) || file_exists(public_path('build/manifest.json')))
+    <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}" defer></script>
+@endunless
 </body>
 </html>
