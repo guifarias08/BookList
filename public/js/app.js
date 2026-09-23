@@ -52,6 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const fallbackStack =
         document.getElementById('toastFallbackStack');
 
+    const passwordInput =
+        document.getElementById('password');
+
+    const passwordToggle =
+        document.getElementById('passwordToggle');
+
+    const capsLockHint =
+        document.getElementById('capsLockHint');
+
 
     // =====================================================
     // TEMA
@@ -808,6 +817,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (
                         form.classList.contains(
+                            'auth-form'
+                        )
+                    ) {
+
+                        loaderMessage =
+                            'Validando suas credenciais...';
+
+                        buttonLabel =
+                            'Entrando...';
+
+                    }
+
+                    else if (
+                        form.classList.contains(
                             'filter-grid'
                         )
                     ) {
@@ -1002,6 +1025,84 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
         });
+
+
+    // =====================================================
+    // LOGIN INTERATIVO
+    // =====================================================
+
+    if (
+        passwordInput &&
+        passwordToggle
+    ) {
+
+        passwordToggle.addEventListener(
+            'click',
+            () => {
+
+                const showing =
+                    passwordInput.type === 'text';
+
+                passwordInput.type =
+                    showing ? 'password' : 'text';
+
+                passwordToggle.classList.toggle(
+                    'is-showing',
+                    !showing
+                );
+
+                passwordToggle.setAttribute(
+                    'aria-label',
+                    showing
+                        ? 'Mostrar senha'
+                        : 'Ocultar senha'
+                );
+
+                passwordInput.focus();
+
+            }
+        );
+
+
+        const syncCapsLock = (event) => {
+
+            if (!capsLockHint) {
+                return;
+            }
+
+            const active =
+                event.getModifierState &&
+                event.getModifierState('CapsLock');
+
+            capsLockHint.hidden =
+                !active;
+
+        };
+
+
+        passwordInput.addEventListener(
+            'keydown',
+            syncCapsLock
+        );
+
+
+        passwordInput.addEventListener(
+            'keyup',
+            syncCapsLock
+        );
+
+
+        passwordInput.addEventListener(
+            'blur',
+            () => {
+
+                if (capsLockHint) {
+                    capsLockHint.hidden = true;
+                }
+
+            }
+        );
+    }
 
 
     // =====================================================
