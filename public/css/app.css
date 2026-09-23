@@ -2059,3 +2059,456 @@ html.dark .btn-primary {
     }
 
 }
+
+/* =====================================================
+   FRONTEND IMPROVEMENTS 2026
+===================================================== */
+
+body {
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.icon-button {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.icon-button:hover {
+    background: var(--surface-2);
+}
+
+.theme-toggle svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.theme-toggle .sun-icon {
+    display: none;
+}
+
+html.dark .theme-toggle .moon-icon {
+    display: none;
+}
+
+html.dark .theme-toggle .sun-icon {
+    display: block;
+}
+
+.menu-lines,
+.menu-lines::before,
+.menu-lines::after {
+    width: 19px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: .2s ease;
+}
+
+.menu-lines {
+    position: relative;
+}
+
+.menu-lines::before,
+.menu-lines::after {
+    content: '';
+    position: absolute;
+    left: 0;
+}
+
+.menu-lines::before {
+    top: -6px;
+}
+
+.menu-lines::after {
+    top: 6px;
+}
+
+.menu-button[aria-expanded="true"] .menu-lines {
+    background: transparent;
+}
+
+.menu-button[aria-expanded="true"] .menu-lines::before {
+    top: 0;
+    transform: rotate(45deg);
+}
+
+.menu-button[aria-expanded="true"] .menu-lines::after {
+    top: 0;
+    transform: rotate(-45deg);
+}
+
+.brand-text span {
+    font-size: 10px;
+}
+
+.main-nav a,
+.btn,
+.field input,
+.field select,
+.field textarea {
+    font-size: 13px;
+}
+
+.eyebrow {
+    font-size: 11px;
+}
+
+.page-heading p {
+    font-size: 14px;
+}
+
+.stat-card span,
+.panel-header-simple p,
+.library-header p,
+.form-panel-header p,
+.tips-intro,
+.danger-panel p,
+.rating-panel > p {
+    font-size: 12px;
+}
+
+.field label,
+.cover-upload label,
+.book-cell strong,
+.reading-progress-header,
+.rating-result,
+.quick-info-row span,
+.quick-info-row strong,
+.alert strong,
+.alert p,
+.alert li {
+    font-size: 12px;
+}
+
+.books-table th,
+.book-cell small,
+.progress-header,
+.status-badge,
+.rating-badge,
+.action-button,
+.cover-placeholder span,
+.cover-upload small,
+.tip p,
+.book-metadata span,
+.book-metadata strong {
+    font-size: 11px;
+}
+
+.books-table td {
+    font-size: 13px;
+}
+
+.field input,
+.field select {
+    min-height: 44px;
+}
+
+.field textarea {
+    min-height: 145px;
+}
+
+.field-error {
+    color: var(--danger) !important;
+    font-weight: 600;
+}
+
+.favorite-filter {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.favorite-filter input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--primary);
+}
+
+.filter-grid {
+    grid-template-columns: minmax(240px, 1.7fr) repeat(3, minmax(150px, 1fr));
+}
+
+.filter-actions {
+    grid-column: 4;
+    justify-content: flex-end;
+}
+
+.table-actions form {
+    margin: 0;
+}
+
+.favorite-button {
+    width: 32px;
+    padding: 0;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.favorite-button.is-favorite,
+.favorite-toggle.is-favorite {
+    color: var(--warning);
+    background: var(--warning-soft);
+}
+
+.favorite-badge {
+    min-height: 25px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 9px;
+    border-radius: 999px;
+    color: var(--warning);
+    background: var(--warning-soft);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.book-status-row,
+.quick-info-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quick-info-title {
+    justify-content: space-between;
+}
+
+.favorite-toggle {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.rating-fieldset {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.rating-options label {
+    position: relative;
+}
+
+.rating-options input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rating-options input:focus-visible + span {
+    outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    outline-offset: 2px;
+}
+
+.pagination-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pagination-link {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pagination-link.disabled {
+    opacity: .45;
+}
+
+.pagination-info {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+@media (max-width: 900px) {
+    .filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .search-field {
+        grid-column: 1 / -1;
+    }
+
+    .filter-actions {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .topbar-actions {
+        margin-left: auto;
+    }
+
+    .menu-button {
+        margin-left: 0;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .books-table {
+        min-width: 0;
+        display: block;
+    }
+
+    .books-table thead {
+        display: none;
+    }
+
+    .books-table tbody {
+        display: grid;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .books-table tr {
+        display: block;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+    }
+
+    .books-table td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 9px 0;
+        border: 0;
+        text-align: right;
+    }
+
+    .books-table td::before {
+        content: attr(data-label);
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        text-align: left;
+    }
+
+    .books-table td:first-child {
+        display: block;
+        padding-bottom: 12px;
+        margin-bottom: 2px;
+        border-bottom: 1px solid var(--border-soft);
+        text-align: left;
+    }
+
+    .books-table td:first-child::before,
+    .books-table .empty-table-cell::before {
+        display: none;
+    }
+
+    .books-table .empty-table-cell {
+        display: block;
+        padding: 0;
+    }
+
+    .book-cell {
+        min-width: 0;
+    }
+
+    .progress-cell {
+        width: min(180px, 60%);
+        min-width: 130px;
+    }
+
+    .table-actions {
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .pagination-area {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 460px) {
+    .brand-text span {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px;
+    }
+
+    .pagination-info {
+        width: 100%;
+        order: -1;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}
