@@ -10,7 +10,7 @@
         <p>Adicione um novo livro à biblioteca escolar.</p>
     </div>
 
-    <a href="{{ route('books.index') }}" class="btn btn-secondary">Voltar</a>
+    <a href="{{ route('books.index') }}" class="btn btn-secondary" data-loading-link="Voltando ao acervo...">Voltar</a>
 </section>
 
 <section class="form-layout">
