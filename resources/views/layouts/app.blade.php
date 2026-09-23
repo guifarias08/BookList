@@ -50,6 +50,18 @@
         </nav>
 
         <div class="topbar-actions">
+            @auth
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                    @csrf
+                    <button type="submit" class="logout-button" aria-label="Sair da conta">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 5H5v14h4M13 8l4 4-4 4M17 12H9"/>
+                        </svg>
+                        <span>Sair</span>
+                    </button>
+                </form>
+            @endauth
+
             <button type="button"
                     id="themeToggle"
                     class="icon-button theme-toggle"
